@@ -20,6 +20,11 @@
         <track kind="captions" src="demo.captions.vtt" srclang="en" label="English" />
       </video>
     </div>
+    
+    <label>server address:</label>
+    <input id="host_addr" type="text" value="http://localhost" />
+    <br/>
+    
     <!-- test js function -->
     <button onclick="video_play()">play</button>
     <button onclick="video_pause()">pause</button>
@@ -47,7 +52,7 @@
 
     </script>
     <script>
-      var host_addr = "http://localhost";
+      var host_addr = document.getElementById('host_addr').value;
 
       var socket = io.connect(host_addr);
       socket.on('play', function(data){

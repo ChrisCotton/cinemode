@@ -24,18 +24,18 @@ function handler (req, res) {
 io.sockets.on('connection', function (socket) {
   console.log('connection');
 
-  socket.on('play', function(socket){
+  socket.on('play', function(s){
     console.log('play');
-    socket.broadcast.emit('play');
+    socket.broadcast.emit('play', function(){} );
   });
 
-  socket.on('pause', function(socket){
+  socket.on('pause', function(s){
     console.log('pause');
-    socket.broadcast.emit('pause');
+    socket.broadcast.emit('pause', function(){} );
   });
 
-  socket.on('stop', function(socket){
-    console.log('stop');
+  socket.on('stop', function(s){
+    console.log('stop', function(){} );
   });
 
   socket.on('disconnect', function () {

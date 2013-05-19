@@ -7,12 +7,17 @@
   </head>
   <body>
     <div>tablet</div>
+    
+    <label>server address:</label>
+    <input id="host_addr" type="text" value="http://localhost" />
+    <br/>
+    
     <button onclick="remote_video_play()">play</button>
     <button onclick="remote_video_pause()">pause</button>
     <button onclick="remote_video.stop()">stop</button>
 
     <script>
-      var host_addr = "http://localhost";
+      var host_addr = document.getElementById('host_addr').value;
 
       var socket = io.connect(host_addr);
       function remote_video_play(){
