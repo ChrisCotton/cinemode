@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Video.js | HTML5 Video Player</title>
+  <link href="video-js.css" rel="stylesheet" type="text/css">
+  <script src="video.js"></script>
+  <script>
+    _V_.options.flash.swf = "video-js.swf";
+  </script>
+</head>
+
+<body>
+<div>
+  <video id="example_video_1" class="video-js vjs-default-skin" controls preload="none" width="640" height="264"
+      poster="http://video-js.zencoder.com/oceans-clip.png"
+      data-setup="{}">
+    <source src="http://video-js.zencoder.com/oceans-clip.webm" type='video/webm' />
+    <track kind="captions" src="demo.captions.vtt" srclang="en" label="English" />
+  </video>
+</div>
+
+<script type="text/javascript">
+
+ videojs("example_video_1").ready(function(){
+      var myPlayer = this;
+      myPlayer.on('timeupdate', function () {
+        if (myPlayer.currentTime() >= 3) {
+            myPlayer.pause();
+            //send an alert to the demo2.html page 
+            //alert("fired event in another page!");
+        }
+      })
+    });
+
+
+</script>
+</body>
+
+</html>
