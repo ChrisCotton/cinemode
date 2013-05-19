@@ -1,41 +1,65 @@
 <!DOCTYPE html>
 <html>
 
-<head>
-  <title>TV</title>
-  <link href="video-js.css" rel="stylesheet" type="text/css">
-  <script src="video.js"></script>
-  <script>
-    _V_.options.flash.swf = "video-js.swf";
-  </script>
-</head>
+  <head>
+    <title>TV</title>
+    <link href="video-js.css" rel="stylesheet" type="text/css">
+    <script src="video.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      _V_.options.flash.swf = "video-js.swf";
+    </script>
+  </head>
 
-<body>
-<div>
-  <video id="example_video_1" class="video-js vjs-default-skin" controls preload="none" width="640" height="264"
-      poster="http://video-js.zencoder.com/oceans-clip.png"
-      data-setup="{}">
-    <source src="http://video-js.zencoder.com/oceans-clip.webm" type='video/webm' />
-    <track kind="captions" src="demo.captions.vtt" srclang="en" label="English" />
-  </video>
-</div>
+  <body>
+    <div>
+      <video id="example_video_1" class="video-js vjs-default-skin" controls preload="none" width="640" height="264"
+          poster="http://video-js.zencoder.com/oceans-clip.png"
+          data-setup="{}">
+        <source src="http://video-js.zencoder.com/oceans-clip.webm" type='video/webm' />
+        <track kind="captions" src="demo.captions.vtt" srclang="en" label="English" />
+      </video>
+    </div>
+    <!-- test js function -->
+    <button onclick="video_play()">play</button>
+    <button onclick="video_pause()">pause</button>
 
-<script type="text/javascript">
+    <script type="text/javascript">
+      myPlayer = videojs("example_video_1");
 
- myPlayer = videojs("example_video_1");
+      // myFunc = function() {
+      //   if (myPlayer.currentTime() >= 3) {
+      //     myPlayer.pause();
+      //     //send an alert to the demo2.html page 
+      //     //alert("fired event in another page!");
+      //   }
+      // };
+        
+      // myPlayer.on('timeupdate', myFunc);
 
- myFunc = function() {
-      if (myPlayer.currentTime() >= 3) {
-            myPlayer.pause();
-            //send an alert to the demo2.html page 
-            //alert("fired event in another page!");
-          }
-    };
-    
-myPlayer.on('timeupdate', myFunc);
-      
+      function video_play(){
+        myPlayer.play();
+      }
 
-</script>
-</body>
+      function video_pause(){
+        myPlayer.pause();
+      }
+
+    </script>
+    <script>
+      var host_addr = "http://localhost";
+
+      var socket = io.connect(host_addr);
+      socket.on('play', function(data){
+        video_play();
+      });
+      socket.on('pause', function(data){
+        video_pause();
+      });
+      socket.on('stop', function(data){
+        myPlayer.stop();
+      });
+    </script>
+  </body>
 
 </html>

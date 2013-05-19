@@ -3,9 +3,29 @@
   <head>
     <meta charset="utf-8">
     <title>tablet</title>
+    <script src="/socket.io/socket.io.js"></script>
   </head>
-
   <body>
     <div>tablet</div>
+    <button onclick="remote_video_play()">play</button>
+    <button onclick="remote_video_pause()">pause</button>
+    <button onclick="remote_video.stop()">stop</button>
+
+    <script>
+      var host_addr = "http://localhost";
+
+      var socket = io.connect(host_addr);
+      function remote_video_play(){
+        socket.emit('play', {});
+      }
+
+      function remote_video_pause(){
+        socket.emit('pause', {});
+      }
+
+      function remote_video_stop(){
+        socket.emit('stop', {});
+      }
+    </script>
   </body>
 </html>
