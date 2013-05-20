@@ -8,8 +8,9 @@ var passport          = require('passport')
   , LocalStrategy     = require('passport-local').Strategy;
 
 var app     = express()
-  , server  = http.createServer(app)
-  , io      = require('socket.io').listen(server);
+  , server  = http.createServer(app);
+  
+
 
 // Passport
 var FACEBOOK_APP_ID = "579460945427195"
@@ -48,15 +49,17 @@ app.configure(function(){
   app.set('view engine', 'blade');
   
   app.use(express.compress()); // gzip
+  
   //app.use(express.logger());
   app.use(express.cookieParser());
   app.use(express.bodyParser());
   app.use(express.methodOverride());
-  app.use(express.session({ secret: 'keyboard cat' }));
+  app.use(express.session({ secret: 'you dont know this' }));
   // Initialize Passport!  Also use passport.session() middleware, to support
   // persistent login sessions (recommended).
   app.use(passport.initialize());
   app.use(passport.session());
+  app.use(app.router);
   app.use(express.static(__dirname + '/public') );
 });
 
@@ -128,6 +131,8 @@ app.get('/logout', function(req, res){
 
 
 // socket.io
+var io = require('socket.io').listen(server);
+io.set('loglevel',10) // set log level to get all debug messages
 io.sockets.on('connection', function (socket) {
   console.log('connection');
 
