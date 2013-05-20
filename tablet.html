@@ -2,17 +2,20 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="/assets/bootstrap.min.css">
+
     <title>Tablet</title>
+    
     <script src="/socket.io/socket.io.js"></script>
     <script src="/assets/bootstrap.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="/assets/bootstrap.min.css"></link>
+    
   </head>
   <body>
     <div class="container">
       <h1>Tablet</h1>
       
       <label>server address:</label>
-      <input id="host_addr" type="text" value="http://byebyeprince.com" />
+      <input id="host_addr" type="text" value="http://localhost" />
       <button class="btn" onclick="reconnect()">reconnect</button>
       <br/>
 
