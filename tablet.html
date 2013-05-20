@@ -2,24 +2,34 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>tablet</title>
+    <title>Tablet</title>
     <script src="/socket.io/socket.io.js"></script>
+    <script src="/assets/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/assets/bootstrap.min.css"></link>
   </head>
   <body>
-    <div>tablet</div>
-    
-    <label>server address:</label>
-    <input id="host_addr" type="text" value="http://localhost" />
-    <br/>
-    
-    <button onclick="remote_video_play()">play</button>
-    <button onclick="remote_video_pause()">pause</button>
-    <button onclick="remote_video.stop()">stop</button>
+    <div class="container">
+      <h1>Tablet</h1>
+      
+      <label>server address:</label>
+      <input id="host_addr" type="text" value="http://byebyeprince.com" />
+      <button class="btn" onclick="reconnect()">reconnect</button>
+      <br/>
+
+      <button class="btn" onclick="remote_video_play()">play</button>
+      <button class="btn" onclick="remote_video_pause()">pause</button>
+      <button class="btn" onclick="remote_video.stop()">stop</button>
+  </div>
 
     <script>
       var host_addr = document.getElementById('host_addr').value;
-
       var socket = io.connect(host_addr);
+
+      function reconnect(){
+        host_addr = document.getElementById('host_addr').value;
+        socket = io.connect(host_addr);
+      }
+
       function remote_video_play(){
         socket.emit('play', {});
       }

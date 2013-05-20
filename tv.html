@@ -3,44 +3,65 @@
 
   <head>
     <title>TV</title>
-    <link href="video-js.css" rel="stylesheet" type="text/css">
-    <script src="video.js"></script>
     <script src="/socket.io/socket.io.js"></script>
+    
+    <script src="/assets/video.js"></script>
+    <script src="/assets/bootstrap.min.js"></script>
+    <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/assets/video-js.css" ></link>
+    <link rel="stylesheet" type="text/css" href="/assets/bootstrap.min.css"></link>
     <script>
       _V_.options.flash.swf = "video-js.swf";
     </script>
   </head>
 
   <body>
-    <div>
-      <video id="example_video_1" class="video-js vjs-default-skin" controls preload="none" width="640" height="264"
-          poster="http://video-js.zencoder.com/oceans-clip.png"
-          data-setup="{}">
-        <source src="http://video-js.zencoder.com/oceans-clip.webm" type='video/webm' />
-        <track kind="captions" src="demo.captions.vtt" srclang="en" label="English" />
-      </video>
+    <div class="container">
+      <div>
+        <video id="example_video_1" class="video-js vjs-default-skin" controls preload="none" width="640" height="264"
+            poster="http://video-js.zencoder.com/oceans-clip.png"
+            data-setup="{}">
+          <source src="http://video-js.zencoder.com/oceans-clip.webm" type='video/webm' />
+          <track kind="captions" src="demo.captions.vtt" srclang="en" label="English" />
+        </video>
+        <div id="banner1" class="banner">
+          <p>this is active</p>
+        </div>
+        <div id="banner2" class="banner">
+          <p>this is hidden</p>
+        </div>
+      </div>
+      <p id="info"></p>
+      
+      <label>server address:</label>
+      <input id="host_addr" type="text" value="http://byebyeprince.com"  />
+      <button class="btn" onclick="reconnect()">reconnect</button>
+      <br/>
+
+      <!-- test js function -->
+      <button class="btn" onclick="video_play()">play</button>
+      <button class="btn" onclick="video_pause()">pause</button>
     </div>
-    
-    <label>server address:</label>
-    <input id="host_addr" type="text" value="http://localhost" />
-    <br/>
-    
-    <!-- test js function -->
-    <button onclick="video_play()">play</button>
-    <button onclick="video_pause()">pause</button>
 
     <script type="text/javascript">
       myPlayer = videojs("example_video_1");
+      var timer = null;
+      var playing = false;
 
-      // myFunc = function() {
-      //   if (myPlayer.currentTime() >= 3) {
-      //     myPlayer.pause();
-      //     //send an alert to the demo2.html page 
-      //     //alert("fired event in another page!");
-      //   }
-      // };
+      myPlayer.addEvent("play", function(){
+        // not work?
+        alert('play');
+        playing = true;
+        $("info").text("playing");
         
-      // myPlayer.on('timeupdate', myFunc);
+      });
+      myPlayer.addEvent("pause", function(){
+        // not work?
+        alert('pause');
+        playing = false;
+        $("info").text("pause");
+        clearInterval(timer);
+      });
 
       function video_play(){
         myPlayer.play();
@@ -51,18 +72,48 @@
       }
 
     </script>
+    <script type="text/javascript">
+      // initialize
+      $("div.banner").hide();
+      
+      // set the state of banners
+      function set_banners(){
+        var t = myPlayer.currentTime();
+        
+        $("div.banner").hide();
+        if( t < 0 ){
+          // unexpected
+        }else if( t < 5 ){
+          $("div#banner1").show();
+        }else if( t < 10 ){
+          $("div#banner2").show();
+        }else{
+
+        }
+      }
+      timer = setInterval( set_banners, 1000 );
+    </script>
+
     <script>
       var host_addr = document.getElementById('host_addr').value;
-
       var socket = io.connect(host_addr);
+
+      function reconnect(){
+        host_addr = document.getElementById('host_addr').value;
+        socket = io.connect(host_addr);
+      }
+
       socket.on('play', function(data){
         video_play();
+        
       });
       socket.on('pause', function(data){
+        // alert('pause callback');
         video_pause();
+        
       });
       socket.on('stop', function(data){
-        myPlayer.stop();
+        // not implemented yet
       });
     </script>
   </body>
