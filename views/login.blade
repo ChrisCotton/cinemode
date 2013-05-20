@@ -1,0 +1,19 @@
+doctype html
+html
+  head
+  body
+    .container
+      a(href="/auth/facebook") something
+      - if(user)
+        p = user.username
+        
+      form(action="/login" method="post")
+        label username:
+        input(type="text")
+        br
+
+        label password:
+        input(type="password")
+        br
+
+        input(type="submit")

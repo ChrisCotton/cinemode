@@ -1,0 +1,110 @@
+doctype html
+html
+  head
+    title TV
+    meta(charset="utf-8")
+    
+    script(src="/socket.io/socket.io.js")
+    script(src="/video.js")
+    script(src="/bootstrap.min.js")
+    script(src="http://code.jquery.com/jquery-1.9.1.min.js")
+    link(charset="utf-8" rel="stylesheet" type="text/css" href="/video-js.css")
+    link(charset="utf-8" rel="stylesheet" type="text/css" href="/bootstrap.min.css")
+    :js
+      _V_.options.flash.swf = "video-js.swf";
+  body
+    .container
+      div
+        video#example_video_1(class="video-js vjs-default-skin" controls preload="none" 
+          width="640" height="264"
+          poster="http://video-js.zencoder.com/oceans-clip.png"
+          data-setup="{}" )
+        source(
+          src="http://video-js.zencoder.com/oceans-clip.webm" 
+          type='video/webm')
+        track(
+          kind="captions" 
+          src="demo.captions.vtt" 
+          srclang="en" 
+          label="English" )
+      #banner1.banner
+        p this is 0-5
+      #banner2.banner
+        p this is 5-10
+      
+      // for debug
+      p#info
+
+      label server address:
+      input#host_addr(type="text" value="http://digitalfood.me")
+      button.btn(onclick="reconnect()") reconnect
+      br
+      
+    :js
+      // initialize
+      $("div.banner").hide();
+      
+      // set the state of banners
+      function set_banners(){
+        var t = myPlayer.currentTime();
+        
+        $("div.banner").hide();
+        if( t <= 0 ){
+          // unexpected
+        }else if( t <= 5 ){
+          $("div#banner1").show();
+        }else if( t <= 10 ){
+          $("div#banner2").show();
+        }else{
+        
+        }
+      }
+      // polling
+      timer = setInterval( set_banners, 1000 );
+      
+      myPlayer = videojs("example_video_1");
+      var timer = null;
+      var playing = false;
+      
+      myPlayer.addEvent("play", function(){
+        // not work?
+        alert('play');
+        playing = true;
+        $("info").text("playing");
+        
+      });
+      myPlayer.addEvent("pause", function(){
+        // not work?
+        alert('pause');
+        playing = false;
+        $("info").text("pause");
+        clearInterval(timer);
+      });
+      
+      function video_play(){
+        myPlayer.play();
+      }
+      
+      function video_pause(){
+        myPlayer.pause();
+      }
+        
+      var host_addr = document.getElementById('host_addr').value;
+      var socket = io.connect(host_addr);
+      
+      function reconnect(){
+        host_addr = document.getElementById('host_addr').value;
+        socket = io.connect(host_addr);
+      }
+        
+      socket.on('play', function(data){
+        video_play();
+      });
+      socket.on('pause', function(data){
+        // alert('pause callback');
+        video_pause();
+      });
+      socket.on('stop', function(data){
+        // not implemented yet
+      });
+      

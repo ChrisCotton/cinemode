@@ -1,0 +1,9 @@
+doctype html
+html
+  head
+  body
+    - if(user)
+      h1 hi, #{user.username}
+    - else
+      h1 please 
+      a(href="/login") login 
