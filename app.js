@@ -1,26 +1,25 @@
-var app = require('http').createServer(handler)
-  , io = require('socket.io').listen(app)
-  , fs = require('fs')
-  , url = require('url')
+var express = require('express');
+var http    = require('http');
+var url     = require('url');
+var fs      = require('fs');
 
-app.listen(80);
+var app     = express();
+var server  = http.createServer(app);
+var io      = require('socket.io').listen(server);
 
-function handler (req, res) {
-  var pathname = url.parse(req.url).pathname;
-  console.log(pathname);
 
-  fs.readFile(__dirname + pathname,
-  function (err, data) {
-    if (err) {
-      res.writeHead(500);
-      return res.end('Error loading '+pathname);
-    }
+app.use(express.compress()); // gzip
+app.use(express.static(__dirname + '/public') );
 
-    res.writeHead(200);
-    res.end(data);
-  });
-}
+app.get('/', function(req,res){
+  res.sendfile(__dirname + '/tv.html');
+});
 
+app.get('/tablet.html', function(req,res){
+  res.sendfile(__dirname + '/tablet.html');
+});
+
+// socket.io
 io.sockets.on('connection', function (socket) {
   console.log('connection');
 
@@ -43,3 +42,4 @@ io.sockets.on('connection', function (socket) {
   });
 });
 
+server.listen( process.env.PORT || 80 );
