@@ -1,15 +1,11 @@
-var express   = require('express');
+var express   = require('express.io');
 var http      = require('http');
-var url       = require('url');
-var fs        = require('fs');
-
-var passport          = require('passport')
-  , FacebookStrategy  = require('passport-facebook').Strategy
-  , LocalStrategy     = require('passport-local').Strategy;
 
 var app     = express()
-  , server  = http.createServer(app);
-  
+app.http().io();
+
+var passport          = require('passport')
+  , FacebookStrategy  = require('passport-facebook').Strategy;
 
 // Passport
 var FACEBOOK_APP_ID = "579460945427195"
@@ -30,13 +26,8 @@ passport.use(new FacebookStrategy({
     callbackURL: "http://digitalfood.me/auth/facebook/callback"
   },
   function(accessToken, refreshToken, profile, done) {
-    // asynchronous verification, for effect...
     process.nextTick(function () {
-      
-      // To keep the example simple, the user's Facebook profile is returned to
-      // represent the logged-in user.  In a typical application, you would want
-      // to associate the Facebook account with a user record in your database,
-      // and return that user instead.
+      // return facebook profile
       return done(null, profile);
     });
   }
@@ -49,38 +40,17 @@ app.configure(function(){
   
   app.use(express.compress()); // gzip
   
-  app.use(express.logger());
   app.use(express.cookieParser());
-  app.use(express.bodyParser());
-  app.use(express.methodOverride());
   app.use(express.session({ secret: 'you dont know this' }));
-  // Initialize Passport!  Also use passport.session() middleware, to support
-  // persistent login sessions (recommended).
   app.use(passport.initialize());
   app.use(passport.session());
-  app.use(app.router);
+  
   app.use(express.static(__dirname + '/public') );
 });
 
-/*
-app.get('/', function(req,res){
-  res.sendfile(__dirname + '/tv.html');
-});
-
-app.get('/tablet.html', function(req,res){
-  res.sendfile(__dirname + '/tablet.html');
-});
-
-
-app.get('/login', function(req,res){
-  res.sendfile(__dirname + '/login.html');
-});
-
-*/
-
-
-app.get('/', function(req, res){
-  res.render('index', { user: req.user });
+// routing
+app.get('/', ensureAuthenticated, function(req, res){
+  res.redirect('/tv');
 });
 
 app.get('/account', ensureAuthenticated, function(req, res){
@@ -92,30 +62,19 @@ app.get('/login', function(req, res){
 });
 
 app.get('/tv', function(req, res){
-  res.render('tv', { user: req.user, socket_io_js_uri: "http://digitalfood.me:3000/socket.io/socket.io.js" });
+  res.render('tv', { user: req.user });
 });
 
 app.get('/tablet', function(req, res){
-  res.render('tablet', { user: req.user, socket_io_js_uri: "http://digitalfood.me:3000/socket.io/socket.io.js"   });
+  res.render('tablet', { user: req.user });
 });
 
-// GET /auth/facebook
-//   Use passport.authenticate() as route middleware to authenticate the
-//   request.  The first step in Facebook authentication will involve
-//   redirecting the user to facebook.com.  After authorization, Facebook will
-//   redirect the user back to this application at /auth/facebook/callback
+
 app.get('/auth/facebook',
   passport.authenticate('facebook'),
-  function(req, res){
-    // The request will be redirected to Facebook for authentication, so this
-    // function will not be called.
-  });
+  function(req, res){} // this function will not be called.
+);
 
-// GET /auth/facebook/callback
-//   Use passport.authenticate() as route middleware to authenticate the
-//   request.  If authentication fails, the user will be redirected back to the
-//   login page.  Otherwise, the primary route function function will be called,
-//   which, in this example, will redirect the user to the home page.
 app.get('/auth/facebook/callback', 
   passport.authenticate('facebook', { failureRedirect: '/login' }),
   function(req, res) {
@@ -127,39 +86,26 @@ app.get('/logout', function(req, res){
   res.redirect('/');
 });
 
-
-
 // socket.io
-var io = require('socket.io').listen(3000);
-io.set('loglevel',10) // set log level to get all debug messages
-io.sockets.on('connection', function (socket) {
-  console.log('connection');
-
-  socket.on('play', function(s){
-    console.log('play');
-    socket.broadcast.emit('play', function(){} );
-  });
-
-  socket.on('pause', function(s){
-    console.log('pause');
-    socket.broadcast.emit('pause', function(){} );
-  });
-
-  socket.on('stop', function(s){
-    console.log('stop', function(){} );
-  });
-  
-  socket.on('disconnect', function () {
-    io.sockets.emit('user disconnected');
-  });
-  
-  socket.on('test', function(){
-    console.log('test');
-  });
+app.io.route('ready', function(req) {
+  console.log('new connection');
 });
 
+app.io.route('test', function(req){
+  console.log('test received');
+});
 
+app.io.route('play', function(s){
+  console.log('play');
+  app.io.broadcast('play', {});
+});
 
+app.io.route('pause', function(s){
+  console.log('pause');
+  app.io.broadcast('pause', {});
+});
+
+// start server
 console.log(app.routes);
 app.listen(process.env.PORT || 80);
 

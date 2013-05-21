@@ -4,12 +4,15 @@ html
     title TV
     meta(charset="utf-8")
     
-    script(charset="utf-8" src=socket_io_js_uri)
-    script(charset="utf-8" src="/video.js")
-    script(charset="utf-8" src="/bootstrap.min.js")
+    script(charset="utf-8" src="/socket.io/socket.io.js")
     script(src="http://code.jquery.com/jquery-1.9.1.min.js")
+    
+    script(charset="utf-8" src="/video.js")
     link(charset="utf-8" rel="stylesheet" type="text/css" href="/video-js.css")
+    
+    script(charset="utf-8" src="/bootstrap.min.js")
     link(charset="utf-8" rel="stylesheet" type="text/css" href="/bootstrap.min.css")
+    
     :js
       _V_.options.flash.swf = "video-js.swf";
   body
@@ -23,13 +26,26 @@ html
         p this is 5-10
       
       // for debug
+      /*
       p#info
-
-      label server address:
-      input#host_addr(type="text" value="http://digitalfood.me:3000")
-      button.btn(onclick="reconnect()") reconnect
+      button(onclick="video_play()")  play
+      button(onclick="video_pause()") pause
       button.btn(onclick="socket.emit('test',{})") test
-      br
+      */
+    :js
+      // socket.io
+      var socket = io.connect();
+      socket.emit('ready');
+        
+      socket.on('play', function(data){
+        video_play();
+      });
+      socket.on('pause', function(data){
+        video_pause();
+      });
+      socket.on('stop', function(data){
+        // not implemented yet
+      });
       
     :js
       // initialize
@@ -53,23 +69,16 @@ html
       // polling
       timer = setInterval( set_banners, 1000 );
       
+    :js
       myPlayer = videojs("example_video_1");
       var timer = null;
       var playing = false;
       
       myPlayer.addEvent("play", function(){
-        // not work?
-        alert('play');
         playing = true;
-        $("info").text("playing");
-        
       });
       myPlayer.addEvent("pause", function(){
-        // not work?
-        alert('pause');
         playing = false;
-        $("info").text("pause");
-        clearInterval(timer);
       });
       
       function video_play(){
@@ -80,23 +89,5 @@ html
         myPlayer.pause();
       }
         
-      var host_addr = document.getElementById('host_addr').value;
-      var socket = io.connect(host_addr);
       
-      function reconnect(){
-        host_addr = document.getElementById('host_addr').value;
-        socket = io.connect(host_addr);
-      }
-        
-      socket.on('play', function(data){
-        alert('help');
-        video_play();
-      });
-      socket.on('pause', function(data){
-        // alert('pause callback');
-        video_pause();
-      });
-      socket.on('stop', function(data){
-        // not implemented yet
-      });
       

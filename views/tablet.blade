@@ -3,30 +3,26 @@ html(lang="en")
   head
     meta(charset="utf-8")
     title Tablet
-    script(src=socket_io_js_uri)
+    script(src="/socket.io/socket.io.js")
     script(src="/bootstrap.min.js")
     link(rel="stylesheet" type="text/css" href="/bootstrap.min.css")
   body
     .container
       h1 Remote
-      
+      /*
       label server address:
       input#host_addr(type="text" value="http://digitalfood.me:3000")
       button.btn(onclick="reconnect()") reconnect
       br
-
+      */
       button.btn(onclick="remote_video_play()") play
       button.btn(onclick="remote_video_pause()") pause
       button.btn(onclick="remote_video_stop()") stop
+      button.btn(onclick="socket.emit('test',{})") test
 
     :js
-      var host_addr = document.getElementById('host_addr').value;
-      var socket = io.connect(host_addr);
-      
-      function reconnect(){
-        host_addr = document.getElementById('host_addr').value;
-        socket = io.connect(host_addr);
-      }
+      var socket = io.connect();
+      socket.emit('ready');
       
       function remote_video_play(){
         socket.emit('play', {});
