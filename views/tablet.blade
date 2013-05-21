@@ -3,7 +3,7 @@ html(lang="en")
   head
     meta(charset="utf-8")
     title Tablet
-    script(src="/socket.io/socket.io.js")
+    script(src=socket_io_js_uri)
     script(src="/bootstrap.min.js")
     link(rel="stylesheet" type="text/css" href="/bootstrap.min.css")
   body
@@ -11,7 +11,7 @@ html(lang="en")
       h1 Remote
       
       label server address:
-      input#host_addr(type="text" value="http://digitalfood.me")
+      input#host_addr(type="text" value="http://digitalfood.me:3000")
       button.btn(onclick="reconnect()") reconnect
       br
 

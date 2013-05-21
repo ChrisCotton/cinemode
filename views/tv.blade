@@ -4,7 +4,7 @@ html
     title TV
     meta(charset="utf-8")
     
-    script(charset="utf-8" src="/socket.io/socket.io.js")
+    script(charset="utf-8" src=socket_io_js_uri)
     script(charset="utf-8" src="/video.js")
     script(charset="utf-8" src="/bootstrap.min.js")
     script(src="http://code.jquery.com/jquery-1.9.1.min.js")
@@ -14,19 +14,9 @@ html
       _V_.options.flash.swf = "video-js.swf";
   body
     .container
-      div
-        video#example_video_1(class="video-js vjs-default-skin" controls preload="none" 
-          width="640" height="264"
-          poster="http://video-js.zencoder.com/oceans-clip.png"
-          data-setup="{}" )
-        source(
-          src="http://video-js.zencoder.com/oceans-clip.webm" 
-          type='video/webm')
-        track(
-          kind="captions" 
-          src="demo.captions.vtt" 
-          srclang="en" 
-          label="English" )
+      video( id="example_video_1" class="video-js vjs-default-skin" controls preload="none" width="640" height="264" poster="http://video-js.zencoder.com/oceans-clip.png" data-setup="{}" )
+        source( src="http://video-js.zencoder.com/oceans-clip.webm" type='video/webm')
+        track( kind="captions" src="demo.captions.vtt" srclang="en" label="English" )
       #banner1.banner
         p this is 0-5
       #banner2.banner
@@ -36,8 +26,9 @@ html
       p#info
 
       label server address:
-      input#host_addr(type="text" value="http://digitalfood.me")
+      input#host_addr(type="text" value="http://digitalfood.me:3000")
       button.btn(onclick="reconnect()") reconnect
+      button.btn(onclick="socket.emit('test',{})") test
       br
       
     :js
@@ -98,6 +89,7 @@ html
       }
         
       socket.on('play', function(data){
+        alert('help');
         video_play();
       });
       socket.on('pause', function(data){
