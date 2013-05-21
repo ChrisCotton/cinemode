@@ -1,0 +1,21 @@
+!!! 5
+html
+  head
+    title Account
+    
+    script(charset="utf-8" src="/bootstrap.min.js")
+    link(charset="utf-8" rel="stylesheet" type="text/css" href="/bootstrap.min.css")
+    
+  body
+    .navbar
+      .navbar-inner
+        .container
+          a.brand(href="/")  Cinemode
+          ul.nav.pull-right
+            li
+              a(href="/logout") logout
+    .container
+      h2 User 
+      p Id: #{user.id}
+      p Username: #{user.username}
+      p Name: #{user.displayName}

@@ -8,17 +8,18 @@ html(lang="en")
     link(rel="stylesheet" type="text/css" href="/bootstrap.min.css")
   body
     .container
-      h1 Remote
+      h2 Tablet
       /*
       label server address:
       input#host_addr(type="text" value="http://digitalfood.me:3000")
       button.btn(onclick="reconnect()") reconnect
       br
       */
-      button.btn(onclick="remote_video_play()") play
-      button.btn(onclick="remote_video_pause()") pause
-      button.btn(onclick="remote_video_stop()") stop
-      button.btn(onclick="socket.emit('test',{})") test
+      .btn-group
+        button.btn(onclick="remote_video_play()") play
+        button.btn(onclick="remote_video_pause()") pause
+        //button.btn(onclick="remote_video_stop()") stop
+        //button.btn(onclick="socket.emit('test',{})") test
 
     :js
       var socket = io.connect();

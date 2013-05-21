@@ -17,14 +17,23 @@ html
       _V_.options.flash.swf = "video-js.swf";
   body
     .container
-      video( id="example_video_1" class="video-js vjs-default-skin" controls preload="none" width="640" height="264" poster="http://video-js.zencoder.com/oceans-clip.png" data-setup="{}" )
-        source( src="http://video-js.zencoder.com/oceans-clip.webm" type='video/webm')
-        track( kind="captions" src="demo.captions.vtt" srclang="en" label="English" )
-      #banner1.banner
-        p this is 0-5
-      #banner2.banner
-        p this is 5-10
-      
+      .navbar
+        .navbar-inner
+          .container
+            a.brand(href="/")  Cinemode
+            ul.nav.pull-right
+              li
+                a(href="/account") hi, #{user.username}
+              li
+                a(href="/logout") logout
+      .container      
+        video( id="example_video_1" class="video-js vjs-default-skin" controls preload="none" width="640" height="264" poster="http://video-js.zencoder.com/oceans-clip.png" data-setup="{}" )
+          source( src="http://video-js.zencoder.com/oceans-clip.webm" type='video/webm')
+          track( kind="captions" src="demo.captions.vtt" srclang="en" label="English" )
+        #banner1.banner
+          p this is 0-5
+        #banner2.banner
+          p this is 5-10
       // for debug
       /*
       p#info

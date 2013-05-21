@@ -49,26 +49,34 @@ app.configure(function(){
 });
 
 // routing
-app.get('/', ensureAuthenticated, function(req, res){
-  res.redirect('/tv');
-});
+app.get('/', 
+  ensureAuthenticated, 
+  function(req, res){
+    res.redirect('/tv');
+  });
 
-app.get('/account', ensureAuthenticated, function(req, res){
-  res.render('account', { user: req.user });
-});
+app.get('/tv', 
+  ensureAuthenticated,
+  function(req, res){
+    res.render('tv', { user: req.user });
+  });
 
-app.get('/login', function(req, res){
-  res.render('login', { user: req.user });
-});
+app.get('/tablet', 
+  ensureAuthenticated,
+  function(req, res){
+    res.render('tablet', { user: req.user });
+  });
 
-app.get('/tv', function(req, res){
-  res.render('tv', { user: req.user });
-});
+app.get('/account', 
+  ensureAuthenticated, 
+  function(req, res){
+    res.render('account', { user: req.user });
+  });
 
-app.get('/tablet', function(req, res){
-  res.render('tablet', { user: req.user });
-});
-
+app.get('/login', 
+  function(req, res){
+    res.render('login', { user: req.user });
+  });
 
 app.get('/auth/facebook',
   passport.authenticate('facebook'),
