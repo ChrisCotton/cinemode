@@ -4,27 +4,26 @@ html(lang="en")
     meta(charset="utf-8")
     title Tablet
     script(src="/socket.io/socket.io.js")
+    script(src="http://code.jquery.com/jquery-1.9.1.min.js")
+    
     script(src="/bootstrap.min.js")
     link(rel="stylesheet" type="text/css" href="/bootstrap.min.css")
   body
     .container
       h2 Tablet
-      /*
-      label server address:
-      input#host_addr(type="text" value="http://digitalfood.me:3000")
-      button.btn(onclick="reconnect()") reconnect
-      br
-      */
+      p#message
       .btn-group
         button.btn(onclick="remote_video_play()") play
         button.btn(onclick="remote_video_pause()") pause
-        //button.btn(onclick="remote_video_stop()") stop
-        //button.btn(onclick="socket.emit('test',{})") test
-
+        button.btn(onclick="remote_video_like()") like
+        
     :js
       var socket = io.connect();
       socket.emit('ready');
       
+      socket.on('message', function(msg){
+        $('#message').text(msg);
+      });
       function remote_video_play(){
         socket.emit('play', {});
       }
@@ -36,3 +35,8 @@ html(lang="en")
       function remote_video_stop(){
         socket.emit('stop', {});
       }
+      
+      function remote_video_like(){
+        socket.emit('like', {});
+      }
+      

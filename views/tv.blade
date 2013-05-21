@@ -26,17 +26,22 @@ html
                 a(href="/account") hi, #{user.username}
               li
                 a(href="/logout") logout
-      .container      
-        video( id="example_video_1" class="video-js vjs-default-skin" controls preload="none" width="640" height="264" poster="http://video-js.zencoder.com/oceans-clip.png" data-setup="{}" )
+      .div(style="width:640px; margin: 0px auto;")      
+        video( id="example_video_1" class="video-js vjs-default-skin" controls preload="none" width="640" height="264" poster="http://video-js.zencoder.com/oceans-clip.png" data-setup="{}")
           source( src="http://video-js.zencoder.com/oceans-clip.webm" type='video/webm')
           track( kind="captions" src="demo.captions.vtt" srclang="en" label="English" )
         #banner1.banner
           p this is 0-5
         #banner2.banner
           p this is 5-10
-      // for debug
-      label video control link: 
-        a(href="/tablet" target="_blank") http://digitalfood.me/tablet
+          
+        label video control link: 
+          a(href="/tablet" target="_blank") http://digitalfood.me/tablet
+          
+        p
+          |!
+            <span id="like_cnt">#{global.like}</span> 
+            people like it.
       
       /*
       p#info
@@ -58,17 +63,22 @@ html
       socket.on('stop', function(data){
         // not implemented yet
       });
+      socket.on('like', function(data){
+        $('#like_cnt').text(data);
+      });
       
     :js
       // initialize
       $("div.banner").hide();
       
+        
       // set the state of banners
       function set_banners(){
         var t = myPlayer.currentTime();
-        
+        var m = t.toFixed(2) + "s in the video.";
+          
         $("div.banner").hide();
-        if( t <= 0 ){
+        if( t < 0 ){
           // unexpected
         }else if( t <= 5 ){
           $("div#banner1").show();
@@ -77,9 +87,11 @@ html
         }else{
         
         }
+        socket.emit('message', {message: m} );
       }
+      
       // polling
-      timer = setInterval( set_banners, 1000 );
+      timer = setInterval( set_banners, 230 );
       
     :js
       myPlayer = videojs("example_video_1");

@@ -7,15 +7,18 @@ html
     link(charset="utf-8" rel="stylesheet" type="text/css" href="/bootstrap.min.css")
     
   body
-    .navbar
-      .navbar-inner
-        .container
-          a.brand(href="/")  Cinemode
-          ul.nav.pull-right
-            li
-              a(href="/logout") logout
     .container
-      h2 User 
-      p Id: #{user.id}
-      p Username: #{user.username}
-      p Name: #{user.displayName}
+      .navbar
+        .row
+          .navbar-inner
+            a.brand(href="/")  Cinemode
+            ul.nav.pull-right
+              li
+                a(href="/logout") logout
+    .container
+      h2 #{user.provider}
+      - if(user.photos)
+        img(href=user.photos[0].value)
+      p Name:  #{user.displayName}
+      - if(user.emails)
+        p Email: #{user.emails[0].value}

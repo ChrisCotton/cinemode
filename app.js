@@ -8,8 +8,9 @@ var passport          = require('passport')
   , FacebookStrategy  = require('passport-facebook').Strategy;
 
 // Passport
-var FACEBOOK_APP_ID = "579460945427195"
-var FACEBOOK_APP_SECRET = "46acd35a5b81f470c7912533573a34bf";
+var FACEBOOK_APP_ID       = "579460945427195"
+var FACEBOOK_APP_SECRET   = "46acd35a5b81f470c7912533573a34bf";
+var FACEBOOK_CALLBACK_URL = "http://digitalfood.me/auth/facebook/callback";
 
 // serial the whole profile
 passport.serializeUser(function(user, done) {
@@ -23,7 +24,7 @@ passport.deserializeUser(function(obj, done) {
 passport.use(new FacebookStrategy({
     clientID: FACEBOOK_APP_ID,
     clientSecret: FACEBOOK_APP_SECRET,
-    callbackURL: "http://digitalfood.me/auth/facebook/callback"
+    callbackURL: FACEBOOK_CALLBACK_URL
   },
   function(accessToken, refreshToken, profile, done) {
     process.nextTick(function () {
@@ -103,14 +104,27 @@ app.io.route('test', function(req){
   console.log('test received');
 });
 
-app.io.route('play', function(s){
+app.io.route('play', function(req){
   console.log('play');
   app.io.broadcast('play', {});
 });
 
-app.io.route('pause', function(s){
+app.io.route('pause', function(req){
   console.log('pause');
   app.io.broadcast('pause', {});
+});
+
+app.io.route('message', function(req){
+  console.log('message ' + req.data.message );
+  app.io.broadcast('message', req.data.message );
+});
+
+
+global.like = 0;
+app.io.route('like', function(req){
+  console.log('like');
+  global.like += 1;
+  app.io.broadcast('like', global.like);
 });
 
 // start server
