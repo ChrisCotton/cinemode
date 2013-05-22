@@ -12,6 +12,7 @@ var FACEBOOK_APP_ID       = "579460945427195"
 var FACEBOOK_APP_SECRET   = "46acd35a5b81f470c7912533573a34bf";
 var FACEBOOK_CALLBACK_URL = "http://digitalfood.me/auth/facebook/callback";
 
+
 // serial the whole profile
 passport.serializeUser(function(user, done) {
   done(null, user);
