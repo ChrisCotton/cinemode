@@ -79,6 +79,7 @@ app.get('/login',
     res.render('login', { user: req.user });
   });
 
+
 app.get('/auth/facebook',
   passport.authenticate('facebook'),
   function(req, res){} // this function will not be called.
@@ -114,9 +115,8 @@ app.io.route('pause', function(req){
   app.io.broadcast('pause', {});
 });
 
-app.io.route('message', function(req){
-  console.log('message ' + req.data.message );
-  app.io.broadcast('message', req.data.message );
+app.io.route('video_time', function(req){
+  app.io.broadcast('video_time', req.data.at);
 });
 
 

@@ -2,7 +2,9 @@
   "name": "cinemode",
   "description": "cinemode",
   "version": "0.0.1",
+  "repository": "",
   "dependencies": {
+    "less": "1.3.x",
     "express.io": ">= 0.0.0",
     "passport": "0.1.x",
     "passport-facebook": ">= 0.0.0",

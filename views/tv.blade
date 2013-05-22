@@ -31,9 +31,11 @@ html
           source( src="http://video-js.zencoder.com/oceans-clip.webm" type='video/webm')
           track( kind="captions" src="demo.captions.vtt" srclang="en" label="English" )
         #banner1.banner
-          p this is 0-5
+          p It is now showing T-shirt
         #banner2.banner
-          p this is 5-10
+          p It is now showing Cap
+        #banner3.banner
+          p It is now showing Shoes
           
         label video control link: 
           a(href="/tablet" target="_blank") http://digitalfood.me/tablet
@@ -75,19 +77,18 @@ html
       // set the state of banners
       function set_banners(){
         var t = myPlayer.currentTime();
-        var m = t.toFixed(2) + "s in the video.";
           
         $("div.banner").hide();
         if( t < 0 ){
           // unexpected
-        }else if( t <= 5 ){
-          $("div#banner1").show();
         }else if( t <= 10 ){
+          $("div#banner1").show();
+        }else if( t <= 20 ){
           $("div#banner2").show();
         }else{
-        
+          $('div#banner3').show();
         }
-        socket.emit('message', {message: m} );
+        socket.emit('video_time', {at: t} );
       }
       
       // polling
