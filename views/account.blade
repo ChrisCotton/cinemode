@@ -1,10 +1,12 @@
 !!! 5
+
+include "shared"
+
 html
   head
     title Account
     
-    script(charset="utf-8" src="/bootstrap.min.js")
-    link(charset="utf-8" rel="stylesheet" type="text/css" href="/bootstrap.min.css")
+    call head_bootstrap()
     
   body
     .container
@@ -19,6 +21,6 @@ html
       h2 #{user.provider}
       - if(user.photos)
         img(href=user.photos[0].value)
-      p Name:  #{user.displayName}
+      p email:  #{user.email}
       - if(user.emails)
         p Email: #{user.emails[0].value}

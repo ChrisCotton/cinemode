@@ -89,10 +89,6 @@ html(lang="en")
         border-color: grey;
       }
       
-      table{
-        width: 100%;
-      }
-      
   body
     .container
       h2 Tablet
@@ -136,7 +132,7 @@ html(lang="en")
       
       .row
         .simpleCart_items
-        a.btn.pull-right.simpleCart_checkout(href="javascript:;")  Checkout
+        a.btn.simpleCart_checkout(href="javascript:;")  Checkout
         
     :js
       var socket = io.connect();
@@ -173,4 +169,6 @@ html(lang="en")
       function remote_video_like(){
         socket.emit('like', {});
       }
+      
+      $('table').addClass('table').addClass('table-bordered');
       

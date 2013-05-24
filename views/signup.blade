@@ -1,0 +1,30 @@
+!!! 5
+
+include "shared"
+
+html
+  head
+    title signup
+    
+    call head_jquery()
+    call head_bootstrap()
+  body
+    - if( typeof error !== 'undefined' )
+      .container
+        p
+          |= error
+    .container
+      form(action="/signup" method="post")
+        label email: 
+        input(type="text" name="email")
+        br
+        
+        label password: 
+        input(type="password" name="password")
+        br
+        
+        label password confirmation:
+        input(type="password" name="password_confirmation")
+        br
+        
+        input(type="submit" value="Submit")

@@ -1,17 +1,16 @@
 !!! 5
+
+include "shared"
+
 html
   head
     title TV
     meta(charset="utf-8")
     
     script(charset="utf-8" src="/socket.io/socket.io.js")
-    script(src="http://code.jquery.com/jquery-1.9.1.min.js")
-    
-    script(charset="utf-8" src="/video.js")
-    link(charset="utf-8" rel="stylesheet" type="text/css" href="/video-js.css")
-    
-    script(charset="utf-8" src="/bootstrap.min.js")
-    link(charset="utf-8" rel="stylesheet" type="text/css" href="/bootstrap.min.css")
+    call head_jquery()
+    call head_videojs()
+    call head_bootstrap()
     
     :js
       _V_.options.flash.swf = "video-js.swf";
@@ -23,7 +22,7 @@ html
             a.brand(href="/")  Cinemode
             ul.nav.pull-right
               li
-                a(href="/account") hi, #{user.username}
+                a(href="/account") hi, #{user.email}
               li
                 a(href="/logout") logout
       .div(style="width:640px; margin: 0px auto;")      

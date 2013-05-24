@@ -1,22 +1,27 @@
-doctype html
+!!! 5
+
+include "shared"
+
 html
   head
-    script(charset="utf-8" src="/bootstrap.min.js")
-    link(charset="utf-8" rel="stylesheet" type="text/css" href="/bootstrap.min.css")
+    title login
+    call head_bootstrap()
   body
     .container(style="padding:80px")
       h2 Welcome to Cinemode
     .container
       form(action="/login" method="post")
         label username:
-        input(type="text")
+        input(type="text" name="username")
         br
 
         label password:
-        input(type="password")
+        input(type="password" name="password")
         br
 
         input(type="submit" value="login")
         
+      p do not have account? 
+        a(href="/signup") sign up
       p or 
         a(href="/auth/facebook") login with facebook
