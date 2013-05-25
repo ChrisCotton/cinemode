@@ -5,6 +5,7 @@ use cinemode;
 create table if not exists users(
   id                int           auto_increment,
   email             varchar(50)   unique not null,
+  is_admin          boolean       default false,
   password_enable   boolean       default false,    -- user login with facebook may not have password
   password_hash     char(64)      default null,     -- SHA-256
   created_at        timestamp     default current_timestamp,
@@ -30,7 +31,7 @@ create table if not exists videos(
   description   text              default "",
   
   primary key(id)
-)
+);
 
 create table if not exists users_like_products(
   user_id     int not null,
@@ -50,6 +51,6 @@ create table if not exists videos_show_products(
   rank        int       default 0,    -- for sorting from top to bottom
   
   index(video_id),
-  foreign key(video_id)   references video(id)    on delete cascade,
-  foreign key(product_id) references products(id) on delete cascade
+  foreign key(video_id)   references videos(id)     on delete cascade,
+  foreign key(product_id) references products(id)   on delete cascade
 );
