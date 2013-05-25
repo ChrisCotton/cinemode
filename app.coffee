@@ -6,26 +6,6 @@ require './modules/misc'
 require './modules/conn'
 passport = require './modules/passport'
 
-conn.insert 'users', {email: 'test@example.com', password_hash: sha256('123123')}, (err) -> return
-
-# # user table
-# createUser = (email, pwd, callback) ->
-#   q = "insert into users(email, password_hash) values (?,?);"
-#   conn.query(q, [email, sha256(pwd)], (err,rows,field) ->
-    
-#     findUserByEmail email, (err,usr,fields) -> callback(err,usr,fields))
-  
-# findUser = (id, callback) ->
-#   q = "select * from users where id = ?;"
-#   conn.query(q, id, (err,rows,fields) -> callback(err,rows[0],fields) )
-  
-# findUserByEmail = (email, callback) ->
-#   conn.cond1 'users', {email: email}, callback
-#   # q = 'select * from users where email = ?;'
-#   # # precondition: email must be unique
-#   # conn.query(q, email, (err,rows,fields) -> callback(err,rows[0],fields) ) 
-
-    
 # configure
 app.configure( ()->
   app.set 'views', __dirname + '/views'
