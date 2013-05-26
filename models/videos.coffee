@@ -1,0 +1,4 @@
+video = {}
+
+
+module.exports = video

@@ -37,8 +37,8 @@ app.get   '/signup'   , (req,res) -> res.render 'signup'
 app.post  '/signup'   , 
   createUser, 
   passport.authenticate 'local', 
-    { successRedirect: '/'
-    , failureRedirect: '/login'}   
+    { successRedirect: '/'        # some problem, do not auto redirect to /tv
+    , failureRedirect: '/login'}    
 
 app.get '/auth/facebook', passport.authenticate('facebook')
 
@@ -50,8 +50,14 @@ app.get '/logout', (req,res) ->
   req.logout()
   res.redirect('/')
   
+  
+  
 # socket.io
-app.io.route 'ready', (req) -> info 'new connection'
+app.io.route 'ready', (req) -> 
+  info 'new connection'
+
+app.io.route 'requestVideo', (req) ->
+  req.user 
 
 app.io.route 'test', (req) -> debug 'test received'
 

@@ -2,8 +2,16 @@ crypto    = require 'crypto'
 
 global.sha256 = (pwd) -> crypto.createHash('sha256').update(pwd).digest('hex')
 
-global.info  = (msg) -> console.log(msg)
-global.warn  = (msg) -> console.log(msg)
+global.log = (msg) -> 
+  console.log(msg)
+  # may write to db
+
+global.info = (msg) -> 
+  console.log(msg)
+  
+global.warn  = (msg) -> 
+  console.log(msg)
+  
 global.debug = (func_or_msg) -> 
   if (typeof func_or_msg) == 'function' 
     open  = '============================ debug ============================'
