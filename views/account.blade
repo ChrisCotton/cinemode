@@ -1,10 +1,13 @@
 !!! 5
+
+include 'shared'
+
 html
   head
     title Account
     
-    script(charset="utf-8" src="/bootstrap.min.js")
-    link(charset="utf-8" rel="stylesheet" type="text/css" href="/bootstrap.min.css")
+    call jqueryH()
+    call bootstrapH()
     
   body
     .container
@@ -15,10 +18,21 @@ html
             ul.nav.pull-right
               li
                 a(href="/logout") logout
-    .container
-      h2 #{user.provider}
-      - if(user.photos)
-        img(href=user.photos[0].value)
-      p Name:  #{user.displayName}
-      - if(user.emails)
-        p Email: #{user.emails[0].value}
+    div(style="width: 200px; margin: 0px auto;")
+      img(src="http://placehold.it/200x200")
+      - if(user.email)
+        p Email: #{user.email}
+      a(href='/password') change password
+
+    p#info
+    :js
+      var user = !{ JSON.stringify(user) }      
+    :cs
+      info = $('p#info')
+      
+      printObj = (obj) ->
+        ks = Object.keys obj
+        ls = ks.map( (k) -> "#{k}=#{obj[k]}" ) 
+        ls.join ' ' 
+        
+      #info.text ( printObj user ) 

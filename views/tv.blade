@@ -21,11 +21,11 @@ html
             a.brand(href="/")  Cinemode
             ul.nav.pull-right
               li
-                a(href="/account") hi, #{user.username}
+                a(href="/account") hi, #{user.email}
               li
                 a(href="/logout") logout
       .div(style="width:800px; margin: 0px auto;")      
-        video#player.video-js.vjs-default-skin( id="player" controls=false autoplay preload="auto" width="800" height="450" poster="http://placehold.it/800x450" data-setup="{}")
+        video#player.video-js.vjs-default-skin( id="player" controls=true autoplay preload="auto" width="800" height="450" poster="http://placehold.it/800x450" data-setup="{}")
           source#video_src
           //- source( src="/movie.mp4" type='video/mp4')
           //- source( src="http://video-js.zencoder.com/oceans-clip.webm" type='video/webm')
@@ -45,14 +45,13 @@ html
             <span id="like_cnt">#{global.like}</span> 
             people like it.
         
-        button(onclick="videoPrev()") prev 
-        button(onclick="videoNext()") next
-        /*
-        button(onclick="video_play()")  play
-        button(onclick="video_pause()") pause
-        button.btn(onclick="socket.emit('test',{})") test
-        p#info something
-        */
+        //- button(onclick="videoPrev()") prev 
+        //- button(onclick="videoNext()") next
+        //- button(onclick="alert('' + player.volume())") vol
+        //- button(onclick="video_play()")  play
+        //- button(onclick="video_pause()") pause
+        //- button.btn(onclick="socket.emit('test',{})") test
+        //- p#info something
         
     :cs
       curr_src = 0
@@ -60,6 +59,7 @@ html
             , { src:'/raven.mp4', type:'video/mp4'}
             , { src:'http://video-js.zencoder.com/oceans-clip.webm', type:'video/webm'}
             ]
+            
       $('#video_src').attr('src', src[curr_src]['src']).attr('type', src[curr_src]['type'])
       this.player = videojs "player"
       
@@ -71,24 +71,47 @@ html
         curr_src = (curr_src + 1) % src.length
         player.src src[curr_src]
         
-    :cs
-      socket = io.connect()
+      # player events
+      player.on 'ended', () ->
+        videoNext()
+        socket.emit 'video:ended'
       
-      socket.on 'volume', (vol) -> player.volume(vol)
-      socket.on 'play',  () -> player.play()
-      socket.on 'pause', () -> player.pause()
-      socket.on 'stop',  () -> player.stop()
-      socket.on 'next',  () -> videoNext()
-      socket.on 'prev',  () -> videoPrev()
+      player.on 'loadedmetadata', () ->
+        socket.emit 'video:loaded_metadata'  
         
+      player.on 'volumechange', () ->
+        socket.emit 'video:volume_change', player.volume()
+        
+    :cs
+      this.socket = io.connect()
+      
+      socket.on 'video:play',  () -> player.play()
+      socket.on 'video:pause', () -> player.pause()
+      socket.on 'video:stop',  () -> player.stop()
+      socket.on 'video:next',  () -> videoNext()
+      socket.on 'video:prev',  () -> videoPrev()
+      socket.on 'video:current_time', (t) -> player.currentTime t
+      socket.on 'video:volume', (vol) -> player.volume(vol)
       socket.on 'like', (cnt) -> 
         $('#like_cnt').text(cnt)
+        
+      socket.on 'video:volume_ask', () -> 
+        socket.emit 'video:volume_reply', player.volume()
       
+      socket.on 'video:duration_ask', () -> 
+        socket.emit 'video:duration_reply', player.duration()
+        
+      socket.on 'video:current_time_ask', () ->
+        socket.emit 'video:current_time_reply', player.currentTime()
+      
+    :cs
       $("div.banner").hide()
       
       wrap = (cb, a, b ) -> cb b, a 
       timer = wrap setInterval, 230, () ->
         t = player.currentTime()
+        $('#info').text(t)
+        
         $('.banner').hide()
         if( t < 0 )
           # unexpected
@@ -98,6 +121,7 @@ html
           $('div#banner2').show()
         else
           $('div#banner3').show()
-        socket.emit 'video_time', t
+          
+        socket.emit 'video:time', t
       
       socket.emit 'ready'

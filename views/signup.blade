@@ -1,0 +1,32 @@
+!!! 5
+
+include "shared"
+
+html
+  head
+    title signup
+    
+    call jqueryH()
+    call bootstrapH()
+  body
+    .container(style="padding:80px;")
+      h2 Sign up to Cinemode
+    - if( typeof error !== 'undefined' )
+      .container
+        p
+          |= error
+    .container
+      form(action="/signup" method="post")
+        label email: 
+        input(type="text" name="email")
+        br
+        
+        label password: 
+        input(type="password" name="password")
+        br
+        
+        label password confirmation:
+        input(type="password" name="password_confirmation")
+        br
+        
+        input(type="submit" value="Submit")

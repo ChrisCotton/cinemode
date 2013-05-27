@@ -90,6 +90,10 @@ html(lang="en")
         width: 100%;
       }
       
+      .item_desc{
+        width:700px;
+      }
+      
   body
     .container
       h2 Tablet
@@ -116,20 +120,25 @@ html(lang="en")
         br
         a.item_add(href="javascript:;") Add to Cart
         
-      #product3.product.simpleCart_shelfItem
-        h3.item_name Shoes
-        label(style="display:inline;") unit price: 
-        span.item_price $80
-        br
-        label(style="display:inline;") quantity: 
-        input.item_Quantity(type="text" value="1")
-        br
-        a.item_add(href="javascript:;") Add to Cart
+      //- #product3.product.simpleCart_shelfItem
+      //-   img.pull-left(src="http://placehold.it/120x120" styple="margin: 0px 10px;")
+      //-   h3.item_name Shoes
+      //-   lebal(style="display:inline;") description:
+      //-   div.item_desc Voluptas commodi incidunt ducimus excepturi quasi voluptatem sit. Atque et molestiae doloribus deserunt nihil temporibus animi eos. Architecto officiis et assumenda totam repellat nihil animi. Ut quo eaque consequatur. Pariatur autem voluptatum ut quo nemo suscipit.
+      //-   label(style="display:inline;") unit price: 
+      //-   span.item_price $80
+      //-   br
+      //-   label(style="display:inline;") quantity: 
+      //-   input.item_Quantity(type="text" value="1")
+      //-   br
+      //-   a.item_add(href="javascript:;") Add to Cart
+      
+      
+      call function product({img:"http://placehold.it/120x120", name:"Shoes", price:80 })#product3
       
       br
       p#time
       #time_slider(style="width:400px")
-      p#duration
         
       br
       .btn-group
@@ -140,7 +149,7 @@ html(lang="en")
         button.btn(onclick="remote_video_like()") like
       br
       p vol 
-        #volume_slider(style="width:100px")
+      #volume_slider(style="width:100px")
       //- input#volumn_control(type="text" value="" class="span2 slider" 
       //-     data-slider-min="0" data-slider-max="100" data-slider-step="1" data-slider-value="50" 
       //-     data-slider-orientation="horizontal" data-slider-selection="after" data-slider-tooltip="show")
@@ -150,27 +159,86 @@ html(lang="en")
         a.btn.pull-right.simpleCart_checkout(href="javascript:;")  Checkout
         
       p#info
+      //- button(onclick="socket.emit('video:volume_ask')") vol
     :cs
-      this.socket = io.connect()
+      this.socket         = io.connect()
+      this.time_slider    = $('#time_slider')
+      this.time_p         = $('p#time')
+      this.volume_slider  = $('#volume_slider')
       
-      this.remote_video_play  = () -> socket.emit 'play'
-      this.remote_video_pause = () -> socket.emit 'pause'
-      this.remote_video_stop  = () -> socket.emit 'stop'
-      this.remote_video_like  = () -> socket.emit 'like'
-      this.remote_video_next  = () -> socket.emit 'next'
-      this.remote_video_prev  = () -> socket.emit 'prev'
       
-      this.get_remote_video_duration = (cb) ->
-        socket.emit 'duration'
-        socket.on 'duration', (d) -> cb(d)
+      this.setVolume = (v) -> 
+        volume_slider.slider "option", "value", Math.round(100*v)
+      
+      this.setTime = (t) ->
+        time_slider.slider "option", "value", t
+      
+      this.setDuration = (d) ->
+        time_slider.slider "option", "max", d
         
-      get_remote_video_duration (t) ->
-        $('#duration').text(t)
+      this.getDuration = () ->
+        time_slider.slider "option", "max"
+      
+      secToMin = (s) ->
+        m = Math.floor( s / 60 )
+        s = Math.round( s % 60 )
+        s = "0" + s if s < 10
+        "#{m}:#{s}"
+      
+      this.setTimeP = (t) ->
+        time_p.text ( secToMin(t) + "/" + secToMin( getDuration() ) )
+    :cs
+      # setup widget
+      $('.product').hide()
+      
+      this.timeControlMode = false
+      time_slider.slider { 
+        min: 0 
+        , 
+        start: () -> timeControlMode = true
+        , 
+        stop:  () -> timeControlMode = false
+        ,
+        slide: (ev, ui) ->
+          setTimeP ui.value
+          socket.emit 'video:current_time', ui.value
+        }
+      socket.emit 'video:duration_ask'
+      
+      volume_slider.slider { 
+        max: 100
+        , 
+        min: 0
+        , 
+        step: 1
+        , 
+        slide: (ev,ui) -> 
+          socket.emit 'video:volume', ui.value / 100
+        }
+      socket.emit 'video:volume_ask'
+      
+      # command
+      this.remote_video_play  = () -> socket.emit 'video:play'
+      this.remote_video_pause = () -> socket.emit 'video:pause'
+      this.remote_video_stop  = () -> socket.emit 'video:stop'
+      this.remote_video_like  = () -> socket.emit 'video:like'
+      this.remote_video_next  = () -> socket.emit 'video:next'
+      this.remote_video_prev  = () -> socket.emit 'video:prev'
+      
+      # info
+      #socket.on 'video:ended', () -> socket.emit 'video:duration_ask'
+      socket.on 'video:loaded_metadata', () -> socket.emit 'video:duration_ask'
+      socket.on 'video:volume_change', (v) -> setVolume v
+      # 
+      socket.on 'video:duration_reply', (d) -> setDuration d
+      socket.on 'video:volume_reply', (v) -> setVolume v
         
     :js
-      $('.product').hide();
-      socket.on('video_time', function(t){
-        $('#time').text( t.toFixed(2) );
+      socket.on('video:time', function(t){
+        if( ! timeControlMode){
+          setTimeP(t); 
+          setTime(t);
+        }
         
         $('.product').hide();
         if( t < 0 ){
@@ -180,20 +248,9 @@ html(lang="en")
         }else if( t < 20){
           $('div#product2').show();
         }else{
-          $('div#product3').show();
+          $('div#product3').show();1
         }
       });
-    
-    :cs
-      $('#time_slider').slider(
-        {})
       
-      $('#volume_slider').slider(
-        { max: 100
-        , min: 0
-        , step: 1
-        , slide: (ev,ui) -> socket.emit 'volume', ui.value
-        })
-        
     :cs
       socket.emit 'ready'
