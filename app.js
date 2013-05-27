@@ -140,6 +140,10 @@ app.io.route('video_time', function(req){
   req.io.broadcast('video_time', req.data);
 });
 
+app.io.route('video_duration', function(req){
+  
+});
+
 
 global.like = 0;
 app.io.route('like', function(req){

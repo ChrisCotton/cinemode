@@ -1,3 +1,33 @@
+function jsTag(src)
+  script(charset="utf-8" src=src)
+  
+function cssTag(href)
+  link(charset="utf-8" rel="stylesheet" type="text/css" href=href)
+
+
+function socketioH()
+  call jsTag("/socket.io/socket.io.js")
+
 function bootstrapSliderH()
-  script(src='/bootstrap-slider.js')
-  link(rel="stylesheet" type="text/css" href="/slider.css")
+  call cssTag("/css/slider.css")
+  call jsTag('/js/bootstrap-slider.js')
+  
+function jqueryH()
+  call jsTag("http://code.jquery.com/jquery-1.9.1.min.js")
+  
+function jqueryuiH()
+  call cssTag('/css/ui-lightness/jquery-ui-1.10.3.custom.min.css')
+  call jsTag("/js/jquery-ui-1.10.3.custom.min.js")
+  
+    
+function bootstrapH()
+  call cssTag("/css/bootstrap.min.css")
+  call jsTag("/js/bootstrap.min.js")
+  
+  
+function simpleCartH()
+  call jsTag("/js/simpleCart.min.js")
+  
+function videojsH()
+  call jsTag("/js/video.js")
+  call cssTag("/css/video-js.css")

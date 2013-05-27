@@ -7,20 +7,13 @@ html(lang="en")
     
     meta(charset="utf-8")
     
-    // socket.io
-    script(src="/socket.io/socket.io.js")
+    call socketioH()
+    call jqueryH()
+    call jqueryuiH()
+    call bootstrapH()
+    call simpleCartH()
+    // call bootstrapSliderH()
     
-    // jquery
-    script(src="http://code.jquery.com/jquery-1.9.1.min.js")
-    
-    // bootstrap
-    script(src="/bootstrap.min.js")
-    link(rel="stylesheet" type="text/css" href="/bootstrap.min.css")
-    
-    // simpleCart
-    script(src="simpleCart.min.js")
-      
-    call bootstrapSliderH()
     :js
       simpleCart({
           cartColumns: [
@@ -133,22 +126,30 @@ html(lang="en")
         br
         a.item_add(href="javascript:;") Add to Cart
       
+      br
+      p#time
+      #time_slider(style="width:400px")
+      p#duration
+        
+      br
       .btn-group
         button.btn(onclick="remote_video_prev()") prev
         button.btn(onclick="remote_video_play()") play
         button.btn(onclick="remote_video_pause()") pause
         button.btn(onclick="remote_video_next()") next
         button.btn(onclick="remote_video_like()") like
-      
-      input#volumn_control(type="text" value="" class="span2 slider" 
-          data-slider-min="0" data-slider-max="100" data-slider-step="1" data-slider-value="50" 
-          data-slider-orientation="horizontal" data-slider-selection="after" data-slider-tooltip="show")
+      br
+      p vol 
+        #volume_slider(style="width:100px")
+      //- input#volumn_control(type="text" value="" class="span2 slider" 
+      //-     data-slider-min="0" data-slider-max="100" data-slider-step="1" data-slider-value="50" 
+      //-     data-slider-orientation="horizontal" data-slider-selection="after" data-slider-tooltip="show")
       
       .row
         .simpleCart_items
         a.btn.pull-right.simpleCart_checkout(href="javascript:;")  Checkout
         
-      //- p#info
+      p#info
     :cs
       this.socket = io.connect()
       
@@ -159,10 +160,17 @@ html(lang="en")
       this.remote_video_next  = () -> socket.emit 'next'
       this.remote_video_prev  = () -> socket.emit 'prev'
       
+      this.get_remote_video_duration = (cb) ->
+        socket.emit 'duration'
+        socket.on 'duration', (d) -> cb(d)
+        
+      get_remote_video_duration (t) ->
+        $('#duration').text(t)
+        
     :js
       $('.product').hide();
       socket.on('video_time', function(t){
-        //$('#message').text(t.toFixed(2) + " in the video");
+        $('#time').text( t.toFixed(2) );
         
         $('.product').hide();
         if( t < 0 ){
@@ -175,14 +183,17 @@ html(lang="en")
           $('div#product3').show();
         }
       });
-      
+    
     :cs
-      $('.slider').slider();
+      $('#time_slider').slider(
+        {})
       
-      $('#volumn_control').slider().on 'slide', (ev) ->
-        v = ev.value / 100
-        socket.emit 'volume', v
-      
+      $('#volume_slider').slider(
+        { max: 100
+        , min: 0
+        , step: 1
+        , slide: (ev,ui) -> socket.emit 'volume', ui.value
+        })
+        
     :cs
       socket.emit 'ready'
-      
