@@ -1,4 +1,6 @@
 !!! 5
+include 'shared'
+
 html(lang="en")
   head
     title Tablet
@@ -17,6 +19,8 @@ html(lang="en")
     
     // simpleCart
     script(src="simpleCart.min.js")
+      
+    call bootstrapSliderH()
     :js
       simpleCart({
           cartColumns: [
@@ -130,18 +134,32 @@ html(lang="en")
         a.item_add(href="javascript:;") Add to Cart
       
       .btn-group
+        button.btn(onclick="remote_video_prev()") prev
         button.btn(onclick="remote_video_play()") play
         button.btn(onclick="remote_video_pause()") pause
+        button.btn(onclick="remote_video_next()") next
         button.btn(onclick="remote_video_like()") like
+      
+      input#volumn_control(type="text" value="" class="span2 slider" 
+          data-slider-min="0" data-slider-max="100" data-slider-step="1" data-slider-value="50" 
+          data-slider-orientation="horizontal" data-slider-selection="after" data-slider-tooltip="show")
       
       .row
         .simpleCart_items
         a.btn.pull-right.simpleCart_checkout(href="javascript:;")  Checkout
         
-    :js
-      var socket = io.connect();
-      socket.emit('ready');
+      //- p#info
+    :cs
+      this.socket = io.connect()
       
+      this.remote_video_play  = () -> socket.emit 'play'
+      this.remote_video_pause = () -> socket.emit 'pause'
+      this.remote_video_stop  = () -> socket.emit 'stop'
+      this.remote_video_like  = () -> socket.emit 'like'
+      this.remote_video_next  = () -> socket.emit 'next'
+      this.remote_video_prev  = () -> socket.emit 'prev'
+      
+    :js
       $('.product').hide();
       socket.on('video_time', function(t){
         //$('#message').text(t.toFixed(2) + " in the video");
@@ -158,19 +176,13 @@ html(lang="en")
         }
       });
       
-      function remote_video_play(){
-        socket.emit('play', {});
-      }
+    :cs
+      $('.slider').slider();
       
-      function remote_video_pause(){
-        socket.emit('pause', {});
-      }
+      $('#volumn_control').slider().on 'slide', (ev) ->
+        v = ev.value / 100
+        socket.emit 'volume', v
       
-      function remote_video_stop(){
-        socket.emit('stop', {});
-      }
-      
-      function remote_video_like(){
-        socket.emit('like', {});
-      }
+    :cs
+      socket.emit 'ready'
       
