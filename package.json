@@ -13,6 +13,7 @@
     "blade": "3.x",
     "redis": "0.8.x",
     "mysql": "2.0.0-alpha2",
-    "crypto": "*"
+    "crypto": "*",
+    "hammerjs": "1.0.x"
   }
 }

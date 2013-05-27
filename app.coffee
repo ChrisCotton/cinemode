@@ -52,7 +52,7 @@ app.get '/logout', (req,res) ->
   req.logout()
   res.redirect('/')
   
-  
+global.like = 0
   
 # socket.io
 app.io.route 'ready', (req) -> 
@@ -133,12 +133,15 @@ app.io.route 'video', {
   duration_reply: (req) ->
     info "duration_reply #{req.data}"
     req.io.broadcast 'video:duration_reply', req.data
-}
-  
-app.io.route 'product', {
+    
+  ,
   like: (req) ->
     info 'like'
+    global.like += 1;
+    req.io.broadcast 'video:like', global.like
 }
+  
+
 
 #info app.routes
 port = process.env.PORT || 80

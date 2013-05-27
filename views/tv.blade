@@ -55,9 +55,9 @@ html
         
     :cs
       curr_src = 0
-      src = [ { src:'/movie.mp4', type:'video/mp4'}
-            , { src:'/raven.mp4', type:'video/mp4'}
-            , { src:'http://video-js.zencoder.com/oceans-clip.webm', type:'video/webm'}
+      src = [ { src:'http://video-js.zencoder.com/oceans-clip.webm', type:'video/webm'}
+            , { src:'http://upload.wikimedia.org/wikipedia/en/5/5b/Cobalt_Drafting_Assistant_demo.ogv', type:'video/ogg'}
+            , { src:'http://mirror.cessen.com/blender.org/peach/trailer/trailer_iphone.m4v', type:'video/mp4'}
             ]
             
       $('#video_src').attr('src', src[curr_src]['src']).attr('type', src[curr_src]['type'])
@@ -83,7 +83,7 @@ html
         socket.emit 'video:volume_change', player.volume()
         
     :cs
-      this.socket = io.connect()
+      this.socket = io.connect(#{global.host})
       
       socket.on 'video:play',  () -> player.play()
       socket.on 'video:pause', () -> player.pause()
@@ -92,7 +92,7 @@ html
       socket.on 'video:prev',  () -> videoPrev()
       socket.on 'video:current_time', (t) -> player.currentTime t
       socket.on 'video:volume', (vol) -> player.volume(vol)
-      socket.on 'like', (cnt) -> 
+      socket.on 'video:like', (cnt) -> 
         $('#like_cnt').text(cnt)
         
       socket.on 'video:volume_ask', () -> 

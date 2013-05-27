@@ -8,14 +8,18 @@ var passport          = require('passport')
   , FacebookStrategy  = require('passport-facebook').Strategy;
 
 // Passport
-// var FACEBOOK_APP_ID       = "579460945427195"
-// var FACEBOOK_APP_SECRET   = "46acd35a5b81f470c7912533573a34bf";
-// var FACEBOOK_CALLBACK_URL = "http://digitalfood.me/auth/facebook/callback";
+var HOST                  = "http://digitalfood.me"
+var FACEBOOK_APP_ID       = "579460945427195"
+var FACEBOOK_APP_SECRET   = "46acd35a5b81f470c7912533573a34bf";
+var FACEBOOK_CALLBACK_URL = "http://digitalfood.me/auth/facebook/callback";
 
 // for testing
-var FACEBOOK_APP_ID       = "363076780460904"
-var FACEBOOK_APP_SECRET   = "0a5daa96bed157945af97a1a0345f579";
-var FACEBOOK_CALLBACK_URL = "http://byebyeprince.com/auth/facebook/callback";
+// var HOST                  = "http://byebyeprince.com"
+// var FACEBOOK_APP_ID       = "363076780460904"
+// var FACEBOOK_APP_SECRET   = "0a5daa96bed157945af97a1a0345f579";
+// var FACEBOOK_CALLBACK_URL = "http://byebyeprince.com/auth/facebook/callback";
+
+global.host = HOST
 
 // serial the whole profile
 passport.serializeUser(function(user, done) {

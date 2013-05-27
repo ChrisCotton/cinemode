@@ -161,7 +161,7 @@ html(lang="en")
       p#info
       //- button(onclick="socket.emit('video:volume_ask')") vol
     :cs
-      this.socket         = io.connect()
+      this.socket         = io.connect( #{global.host} )
       this.time_slider    = $('#time_slider')
       this.time_p         = $('p#time')
       this.volume_slider  = $('#volume_slider')
