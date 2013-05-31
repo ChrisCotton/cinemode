@@ -1,18 +1,20 @@
 !!! 5
 
-include 'shared'
+include shared
 
 html
   head
     title TV
     meta(charset="utf-8")
     
-    call socketioH()
-    call jqueryH()
-    call bootstrapH()
-    call videojsH()
-    :js
+    mixin socketioH()
+    mixin jqueryH()
+    mixin bootstrapH()
+    mixin videojsH()
+    script
       _V_.options.flash.swf = "video-js.swf";
+      var host = !{global.host};
+      
   body
     .container
       .navbar
@@ -24,26 +26,29 @@ html
                 a(href="/account") hi, #{user.email}
               li
                 a(href="/logout") logout
-      .div(style="width:800px; margin: 0px auto;")      
-        video#player.video-js.vjs-default-skin( id="player" controls=true autoplay preload="auto" width="800" height="450" poster="http://placehold.it/800x450" data-setup="{}")
+      .div( style="width:800px; margin: 0px auto;" )      
+        video#player.video-js.vjs-default-skin( 
+          id="player" 
+          controls="true" 
+          autoplay="true"
+          preload="auto" 
+          width="800"
+          height="450" 
+          poster="http://placehold.it/800x450" 
+          data-setup="{}")
           source#video_src
           //- source( src="/movie.mp4" type='video/mp4')
           //- source( src="http://video-js.zencoder.com/oceans-clip.webm" type='video/webm')
           //- track( kind="captions" src="demo.captions.vtt" srclang="en" label="English" )
-        #banner1.banner
-          p It is now showing T-shirt
-        #banner2.banner
-          p It is now showing Cap
-        #banner3.banner
-          p It is now showing Shoes
+        //- #banner1.banner
+        //-   p It is now showing T-shirt
+        //- #banner2.banner
+        //-   p It is now showing Cap
+        //- #banner3.banner
+        //-   p It is now showing Shoes
           
         label video control: 
-          a(href="/tablet" target="_blank") http://digitalfood.me/tablet
-          
-        p
-          |!
-            <span id="like_cnt">#{global.like}</span> 
-            people like it.
+          a(href="/tablet", target="_blank") http://digitalfood.me/tablet
         
         //- button(onclick="videoPrev()") prev 
         //- button(onclick="videoNext()") next
@@ -53,7 +58,7 @@ html
         //- button.btn(onclick="socket.emit('test',{})") test
         //- p#info something
         
-    :cs
+    :coffeescript
       curr_src = 0
       src = [ { src:'http://video-js.zencoder.com/oceans-clip.webm', type:'video/webm'}
             , { src:'http://upload.wikimedia.org/wikipedia/en/5/5b/Cobalt_Drafting_Assistant_demo.ogv', type:'video/ogg'}
@@ -81,9 +86,9 @@ html
         
       player.on 'volumechange', () ->
         socket.emit 'video:volume_change', player.volume()
-        
-    :cs
-      this.socket = io.connect(#{global.host})
+      
+    :coffeescript
+      this.socket = io.connect()
       
       socket.on 'video:play',  () -> player.play()
       socket.on 'video:pause', () -> player.pause()
@@ -104,7 +109,7 @@ html
       socket.on 'video:current_time_ask', () ->
         socket.emit 'video:current_time_reply', player.currentTime()
       
-    :cs
+    :coffeescript
       $("div.banner").hide()
       
       wrap = (cb, a, b ) -> cb b, a 

@@ -1,13 +1,13 @@
 !!! 5
 
-include "shared"
+include shared
 
 html
   head
     title signup
     
-    call jqueryH()
-    call bootstrapH()
+    mixin jqueryH()
+    mixin bootstrapH()
   body
     .container(style="padding:80px;")
       h2 Sign up to Cinemode
@@ -16,17 +16,17 @@ html
         p
           |= error
     .container
-      form(action="/signup" method="post")
+      form(action="/signup", method="post")
         label email: 
-        input(type="text" name="email")
+        input(type="text", name="email")
         br
         
         label password: 
-        input(type="password" name="password")
+        input(type="password", name="password")
         br
         
         label password confirmation:
-        input(type="password" name="password_confirmation")
+        input(type="password", name="password_confirmation")
         br
         
-        input(type="submit" value="Submit")
+        input(type="submit", value="Submit")

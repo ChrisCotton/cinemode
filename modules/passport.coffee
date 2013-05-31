@@ -8,9 +8,12 @@ LocalStrategy     = require('passport-local').Strategy;
 # var FACEBOOK_CALLBACK_URL = "http://digitalfood.me/auth/facebook/callback";
 
 # for testing
+HOST                  = "http://byebyeprince.com"
 FACEBOOK_APP_ID       = "363076780460904"
 FACEBOOK_APP_SECRET   = "0a5daa96bed157945af97a1a0345f579"
 FACEBOOK_CALLBACK_URL = "http://byebyeprince.com/auth/facebook/callback"
+
+global.host = HOST
 
 # passport initialize
 passport.serializeUser( (user,done) -> done(null ,user.id) )

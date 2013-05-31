@@ -9,7 +9,7 @@ passport = require './modules/passport'
 # configure
 app.configure( ()->
   app.set 'views', __dirname + '/views'
-  app.set 'view engine', 'blade'
+  app.set 'view engine', 'jade'
   
   app.use express.compress()
   
@@ -26,7 +26,18 @@ app.configure( ()->
 # routing
 app.get   '/'         , (req,res) -> res.redirect('/tv')
 app.get   '/tv'       , ensureAuthenticated                 , (req,res) -> res.render 'tv', {user: req.user}
-app.get   '/tablet'   , ensureAuthenticated                 , (req,res) -> res.render 'tablet', { user: req.user }
+app.get   '/tablet', 
+  ensureAuthenticated , 
+  (req,res) ->  res.render 'tablet', 
+    { user: req.user
+    , products: [ { img:"/shoes.jpg", name:"Shoes", price:15 }
+                , { img:"/tshirt.jpg", name:"Shirt", price:10}
+                , { img:"/jeans.jpg", name:"Jeans", price:30}
+                , { img:"/shoes2.jpg", name:"Shoes", price:15}
+                , { img:"/tshirt2.jpg", name:"Shirt", price:10}
+                , { img:"/jeans2.jpg", name:"Jeans", price:30}
+                ] 
+    }
 app.get   '/account'  , ensureAuthenticated                 , (req,res) -> res.render 'account', { user: req.user }
 app.get   '/password' , ensureAuthenticated                 , (req,res) -> res.render 'password', { user: req.user }
 app.post  '/password' , ensureAuthenticated                 , changePassword

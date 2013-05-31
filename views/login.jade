@@ -1,25 +1,25 @@
 !!! 5
 
-include "shared"
+include shared
 
 html
   head
     title login
-    call bootstrapH()
+    mixin bootstrapH()
   body
     .container(style="padding:80px")
       h2 Welcome to Cinemode
     .container
-      form(action="/login" method="post")
+      form(action="/login", method="post")
         label username:
-        input(type="text" name="username")
+        input(type="text", name="username")
         br
 
         label password:
-        input(type="password" name="password")
+        input(type="password", name="password")
         br
 
-        input(type="submit" value="login")
+        input(type="submit", value="login")
         
       p do not have account? 
         a(href="/signup") sign up

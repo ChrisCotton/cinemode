@@ -1,0 +1,67 @@
+mixin jsTag(src)
+  script(charset="utf-8", src="#{src}")
+    
+mixin cssTag(href)
+  link(charset="utf-8", rel="stylesheet", type="text/css", href="#{href}")
+
+mixin bootstrapH()
+  mixin cssTag("/css/bootstrap.min.css")
+  mixin jsTag("/js/bootstrap.min.js")
+
+
+mixin socketioH()
+  mixin jsTag("/socket.io/socket.io.js")
+
+mixin bootstrapSliderH()
+  mixin cssTag("/css/slider.css")
+  mixin jsTag('/js/bootstrap-slider.js')
+  
+mixin jqueryH()
+  mixin jsTag("http://code.jquery.com/jquery-1.9.1.min.js")
+  
+mixin jqueryuiH()
+  mixin cssTag('/css/ui-lightness/jquery-ui-1.10.3.custom.min.css')
+  mixin jsTag("/js/jquery-ui-1.10.3.custom.min.js")
+  
+    
+mixin bootstrapH()
+  mixin cssTag("/css/bootstrap.min.css")
+  mixin jsTag("/js/bootstrap.min.js")
+  
+  
+mixin simpleCartH()
+  mixin jsTag("/js/simpleCart.min.js")
+  
+mixin videojsH()
+  mixin jsTag("/js/video.js")
+  mixin cssTag("/css/video-js.css")
+  
+mixin product(id, product)
+  img.product_img(src="#{product['img']}")
+
+    
+  
+mixin product2(id, product)
+  .product.simpleCart_shelfItem(id="product#{id}")
+    
+    h3.item_name #{ product['name'] }
+    img(src="#{product['img']}", style="margin: 0px 10px;")
+    
+    label(style="display:inline;") unit price: 
+    span.item_price $ #{ product['price'] }
+    br
+    
+    lebal(style="display:inline;") description:
+    div.item_desc 
+      | Voluptas commodi incidunt ducimus excepturi quasi voluptatem sit. Atque et molestiae 
+      | doloribus deserunt nihil temporibus animi eos. Architecto officiis et assumenda totam repellat nihil animi. 
+      | Ut quo eaque consequatur. Pariatur autem voluptatum ut quo nemo suscipit.
+    br
+    
+    //- label(style="display:inline;") quantity: 
+    //- input.item_Quantity(type="text" value="1")
+
+    a.btn.item_add(
+      href="javascript:;"
+      style="width: 100px; margin: 0px 10px;") 
+      | Add to Cart

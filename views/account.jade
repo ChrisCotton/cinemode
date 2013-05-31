@@ -1,13 +1,13 @@
 !!! 5
 
-include 'shared'
+include shared
 
 html
   head
     title Account
     
-    call jqueryH()
-    call bootstrapH()
+    mixin jqueryH()
+    mixin bootstrapH()
     
   body
     .container
@@ -25,9 +25,9 @@ html
       a(href='/password') change password
 
     p#info
-    :js
+    script
       var user = !{ JSON.stringify(user) }      
-    :cs
+    :coffeescript
       info = $('p#info')
       
       printObj = (obj) ->

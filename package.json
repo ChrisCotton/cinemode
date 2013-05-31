@@ -10,7 +10,7 @@
     "passport": "0.1.x",
     "passport-facebook": ">= 0.1.x",
     "passport-local": ">= 0.1.x",
-    "blade": "3.x",
+    "jade" : "*",
     "redis": "0.8.x",
     "mysql": "2.0.0-alpha2",
     "crypto": "*",
