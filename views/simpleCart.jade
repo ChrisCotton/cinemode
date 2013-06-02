@@ -3,13 +3,13 @@ mixin simpleCartH()
     script
       simpleCart({
         cartColumns: [
-            { attr: "name" , label: "Name" },
-            { attr: "price" , label: "Price", view: 'currency' },
-            { view: "decrement" , label: false },
+            //- { view: "increment" , label: false },
+            //- { view: "decrement" , label: false },
             { attr: "quantity" , label: "Qty" },
-            { view: "increment" , label: false },
-            { attr: "total" , label: "SubTotal", view: 'currency' },
-            { view: "remove" , text: "Remove" , label: false }
+            { attr: "name" , label: "Name" },
+            //- { attr: "price" , label: "Price", view: 'currency' },
+            { attr: "total" , label: "Total", view: 'currency' },
+            { view: "remove" , text: "del" , label: false }
         ],
         
         // "div" or "table" - builds the cart as a table or collection of divs

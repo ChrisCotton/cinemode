@@ -167,6 +167,6 @@ app.io.route 'video', {
 
 
 #info app.routes
-port = process.env.PORT || 8080
+port = process.env.PORT || 80
 info "listening on #{port}"
 app.listen (port)
