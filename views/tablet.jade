@@ -1,5 +1,7 @@
 !!! 5
+
 include shared
+include simpleCart
 
 html(lang="en")
   head
@@ -13,84 +15,19 @@ html(lang="en")
     mixin bootstrapH()
     mixin simpleCartH()
     // mixin bootstrapSliderH()
-    
     script
-      var host = !{global.host}
-      simpleCart({
-        cartColumns: [
-            { attr: "name" , label: "Name" },
-            { attr: "price" , label: "Price", view: 'currency' },
-            { view: "decrement" , label: false },
-            { attr: "quantity" , label: "Qty" },
-            { view: "increment" , label: false },
-            { attr: "total" , label: "SubTotal", view: 'currency' },
-            { view: "remove" , text: "Remove" , label: false }
-        ],
-        
-        // "div" or "table" - builds the cart as a table or collection of divs
-        cartStyle: "table", 
-        
-        // how simpleCart should checkout, see the checkout reference for more info 
-        checkout: { 
-            type: "PayPal" , 
-            email: "you@yours.com" 
-        },
-        
-        // set the currency, see the currency reference for more info
-        currency: "USD",
-        
-        // collection of arbitrary data you may want to store with the cart, 
-        // such as customer info
-        data: {},
-        
-        // set the cart langauge (may be used for checkout)
-        language: "english-us",
-        
-        // array of item fields that will not be sent to checkout
-        excludeFromCheckout: [],
-          
-        // custom function to add shipping cost
-        shippingCustom: null,
-          
-        // flat rate shipping option
-        shippingFlatRate: 0,
-        
-        // added shipping based on this value multiplied by the cart quantity
-        shippingQuantityRate: 0,
-        
-        // added shipping based on this value multiplied by the cart subtotal
-        shippingTotalRate: 0,
-        
-        // tax rate applied to cart subtotal
-        taxRate: 0,
-        
-        // true if tax should be applied to shipping
-        taxShipping: false,
-        
-        // event mixinbacks 
-        beforeAdd               : null,
-        afterAdd                : null,
-        load                    : null,
-        beforeSave              : null,
-        afterSave               : null,
-        update                  : null,
-        ready                   : null,
-        checkoutSuccess             : null,
-        checkoutFail                : null,
-        beforeCheckout              : null
-      }); 
-      
+      var host = "!{global.host}"
+    
     style
-      .product{
-        border-style: solid;
-        border-width: 0px;
-        border-color: gray;
+      * {
+        padding: 0px;
+        margin: 0px;
       }
       
-      table{
+      body{
         width: 100%;
+        overflow-x: hidden;
       }
-      
       .item_desc{
         width:700px;
       }
@@ -98,8 +35,8 @@ html(lang="en")
         position: absolute;
         display: block;
         left: -100px;
-        width: 100%;
-        height: 300px; 
+        width: 10000px;
+        height: 400px; 
         overflow-x: hidden;
         overflow-y: hidden;
         white-space: nowrap; /* for singel line T^T */
@@ -109,17 +46,31 @@ html(lang="en")
       #product_img_list li{
         display: inline;
         list-style-type: none;
-        border: 1px solid black;
+        border: 0px solid black;
         padding:0px;
         margin: 0px;
       }  
+      .product{
+        display: inline-block;
+        width: 400px;
+        height: 280px;
+        text-align: center;
+        
+        -webkit-transition: all 0.25s ease;
+        -moz-transition: all 0.25s ease;
+        -o-transition: all 0.25s ease;
+        -ms-transition: all 0.25s ease;
+        transition: all 0.25s ease;
+      }
+      
       .product_img{
-        width:160px;
+        width: 160px;
         height:160px;
         margin: 60px 80px;
         padding: 0px;
-        border: 1px solid #ccc; 
+        
         /*
+        border: 1px solid #ccc; 
         -webkit-border-radius: 5px;
         -moz-border-radius: 5px;
         border-radius: 5px;
@@ -140,11 +91,11 @@ html(lang="en")
       }
       
       .product_img:hover {
-        -webkit-transform: scale(1.1);
-        -moz-transform: scale(1.1);
-        -o-transform: scale(1.1);
-        -ms-transform: scale(1.1);
-        transform: scale(1.1);
+        -webkit-transform: scale(1.5);
+        -moz-transform: scale(1.5);
+        -o-transform: scale(1.5);
+        -ms-transform: scale(1.5);
+        transform: scale(1.5);
         cursor: pointer;
          
         filter: saturate(100%);
@@ -158,24 +109,30 @@ html(lang="en")
         -moz-box-shadow: 0px 0px 5px rgba(0,0,0,0.2);
         box-shadow: 0px 0px 5px rgba(0,0,0,0.2);
         */
-        }
-  body
-    
+      }
+      
+      #control {
+        position:absolute;
+        top: 500px;
+        width:100%;
+      }
+  body   
+    //- p#room room: 
     div(style="padding: 40px; ")
         
     div(style="position:relative;")
       //- div(style="position:absolute; ")
       ul#product_img_list
-        each p, i in products
-          li 
-            mixin product(i,p)  
-    div(style="position:absolute;top:400px;width:100%;")
+        //- each p, i in products
+        //-   li 
+        //-     mixin product(i,p)  
+    div#control
       div(style="position:static; margin:0px auto; width:400px")
         
         p#time(style="display:inline-block;")
         #volume_slider(style="display:inline-block; margin:5px 0px; width:40px; float:right")
           
-        #time_slider(style="width:400px; margin: 7px 0px")
+        #time_slider(style="width:400px; margin: 7px 0px;")
           
         .btn-group(style="display:inline-block;")
           a.btn(onclick="remote_video_prev()", href="#")
@@ -192,18 +149,75 @@ html(lang="en")
         a.btn.pull-right.simpleCart_checkout(href="javascript:;")  Checkout
           
         p#info
+        //- input(id='testpos', type='text', value='1')
+        //- button(id='testbtn') test
         //- button(onclick="socket.emit('video:volume_ask')") vol
     script
-      var num_product = #{products.length};
-    
+      var products = !{JSON.stringify(products )} ;
+
+    :coffeescript
+      this.tag = (n, inner) -> 
+        x = $( document.createElement(n) )
+        return x if(typeof inner == 'undefined')
+        if( Array.isArray inner ) 
+          for i in inner 
+            x.append i
+        else
+          x.append inner
+        return x  
+      
+      this.spanTag = (inner) -> tag('span',inner)
+      this.divTag = (inner) -> tag('div',inner)
+      this.pTag = (inner) -> tag('p', inner)
+      this.brTag = () -> tag('br')
+      
+      this.mkLikeBtn = (n) ->
+        p   = tag('p').html("#{n} &nbsp;")
+        p.css('display', 'inline-block')
+        btn = tag('a').addClass('btn-link').text('Likes')
+        btn.on 'click', () ->
+          btn.text('Liked')
+          p.html "#{n+1} &nbsp;"
+        divTag().append(p).append(btn)
+          
     :coffeescript
       this.socket         = io.connect()
       this.time_slider    = $('#time_slider')
       this.time_p         = $('p#time')
       this.volume_slider  = $('#volume_slider')
       this.product_img_list = $('#product_img_list')
+      this.info           = $('p#info')
       
-     
+      products.forEach (p,i) -> 
+        d = divTag().addClass('product')
+        d.append (tag 'img').addClass('product_img').attr('src', p.img)
+        d.append mkLikeBtn( (101*i + 7) % 53 + 19)
+        d.append (tag 'a').text('add to cart')
+        product_img_list.append tag('li', d)
+      
+      
+      $('#testbtn').on 'click', () ->
+        v = $('#testpos').val()
+        n = parseInt( v )
+        centralize n
+      
+      this.centralize = (nth) ->
+        sw = $(window).width()
+        pos = sw/2 - (400*nth) + 200
+        # alert "#{sw} #{nth} #{pos}"
+        # enlarge center image
+        ###
+        cs = product_img_list.children()
+        cs.forEach (c,i) ->
+          alert 'work'
+          img = c.child[0].child[0]
+          alert (typeof img)
+          if(i == nth)
+            img.css('width', 200).css('height', 200)
+          else
+            img.css('width', 160).css('height', 160) 
+        ###     
+        product_img_list.animate( {left: pos}, 'fast' )
       
       this.setVolume = (v) -> 
         volume_slider.slider "option", "value", Math.round(100*v)
@@ -227,8 +241,6 @@ html(lang="en")
         time_p.text ( secToMin(t) + "/" + secToMin( getDuration() ) )
         
       # setup widget
-      $('.product').hide()
-      
       this.timeControlMode = false
       time_slider.slider { 
         min: 0 
@@ -242,8 +254,8 @@ html(lang="en")
           socket.emit 'video:current_time', ui.value
         ,
         change: (ev,ui) ->
-          pos = $(document).width() - 110*num_product
-          product_img_list.css('left', -500 )
+          pos = $(document).width() - 110*products.length
+          # product_img_list.css('left', 0 )
         }
       socket.emit 'video:duration_ask'
       
@@ -276,24 +288,24 @@ html(lang="en")
       socket.on 'video:duration_reply', (d) -> setDuration d
       socket.on 'video:volume_reply', (v) -> setVolume v
         
-    script
-      socket.on('video:time', function(t){
-        if( ! timeControlMode){
-          setTimeP(t); 
-          setTime(t);
-        }
+    :coffeescript
+      socket.on 'video:time', (t) ->
+        if ! timeControlMode
+          setTimeP t # set time text
+          setTime t  # set slider
         
-        $('.product').hide();
-        if( t < 0 ){
-          // unexpedted
-        }else if( t < 10 ){
-          $('div#product0').show();
-        }else if( t < 20){
-          $('div#product1').show();
-        }else{
-          $('div#product2').show();1
-        }
-      });
+        b = true
+        for i in [1..products.length-1]
+          # alert "#{products[i].start} #{t} #{products[i].start}"
+          if products[i-1].start <= t < products[i].start
+            centralize i
+            b = false
+            break
+        if b
+          centralize products.length
       
     :coffeescript
+      # alert "#{Object.keys products[0]}"
+      socket.on 'room:reply', (data) -> $('#room').append data
+      socket.emit 'room:ask'
       socket.emit 'ready'

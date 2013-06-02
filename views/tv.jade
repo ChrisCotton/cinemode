@@ -13,7 +13,7 @@ html
     mixin videojsH()
     script
       _V_.options.flash.swf = "video-js.swf";
-      var host = !{global.host};
+      // var host = '!{global.host}';
       
   body
     .container
@@ -47,8 +47,7 @@ html
         //- #banner3.banner
         //-   p It is now showing Shoes
           
-        label video control: 
-          a(href="/tablet", target="_blank") http://digitalfood.me/tablet
+        a(href="/tablet", target="_blank") video control
         
         //- button(onclick="videoPrev()") prev 
         //- button(onclick="videoNext()") next
@@ -59,9 +58,10 @@ html
         //- p#info something
         
     :coffeescript
+      
       curr_src = 0
       src = [ { src:'http://video-js.zencoder.com/oceans-clip.webm', type:'video/webm'}
-            , { src:'http://upload.wikimedia.org/wikipedia/en/5/5b/Cobalt_Drafting_Assistant_demo.ogv', type:'video/ogg'}
+            # , { src:'http://upload.wikimedia.org/wikipedia/en/5/5b/Cobalt_Drafting_Assistant_demo.ogv', type:'video/ogg'}
             , { src:'http://mirror.cessen.com/blender.org/peach/trailer/trailer_iphone.m4v', type:'video/mp4'}
             ]
             
@@ -89,6 +89,9 @@ html
       
     :coffeescript
       this.socket = io.connect()
+      
+      
+      socket.on 'room:reply', (data) -> $('#room').append data
       
       socket.on 'video:play',  () -> player.play()
       socket.on 'video:pause', () -> player.pause()
@@ -128,5 +131,6 @@ html
           $('div#banner3').show()
           
         socket.emit 'video:time', t
-      
+        
+      socket.emit 'room:ask'
       socket.emit 'ready'

@@ -37,8 +37,11 @@ mixin videojsH()
   mixin cssTag("/css/video-js.css")
   
 mixin product(id, product)
-  img.product_img(src="#{product['img']}")
-
+  .product
+    img.product_img(src="#{product['img']}")
+    p 
+      span.like #{product.like}
+      | people like this
     
   
 mixin product2(id, product)

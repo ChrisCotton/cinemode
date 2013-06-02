@@ -25,19 +25,26 @@ app.configure( ()->
 
 # routing
 app.get   '/'         , (req,res) -> res.redirect('/tv')
-app.get   '/tv'       , ensureAuthenticated                 , (req,res) -> res.render 'tv', {user: req.user}
+app.get   '/tv', 
+  ensureAuthenticated, 
+  (req,res) -> 
+    r = req.user.id.toString()
+    req.session.room = req.user.id
+    req.session.save()
+    res.render 'tv', {user: req.user}
 app.get   '/tablet', 
   ensureAuthenticated , 
-  (req,res) ->  res.render 'tablet', 
-    { user: req.user
-    , products: [ { img:"/shoes.jpg", name:"Shoes", price:15 }
-                , { img:"/tshirt.jpg", name:"Shirt", price:10}
-                , { img:"/jeans.jpg", name:"Jeans", price:30}
-                , { img:"/shoes2.jpg", name:"Shoes", price:15}
-                , { img:"/tshirt2.jpg", name:"Shirt", price:10}
-                , { img:"/jeans2.jpg", name:"Jeans", price:30}
-                ] 
-    }
+  (req,res) ->  
+    res.render 'tablet', 
+      { user: req.user
+      , products: [ { img:"/shoes.jpg", name:"Shoes", price:15 , start: 0 }
+                  , { img:"/tshirt.jpg", name:"Shirt", price:10, start: 5 }
+                  , { img:"/jeans.jpg", name:"Jeans", price:30, start: 10}
+                  , { img:"/shoes2.jpg", name:"Shoes", price:15, start: 15 }
+                  , { img:"/tshirt2.jpg", name:"Shirt", price:10, start: 20 }
+                  , { img:"/jeans2.jpg", name:"Jeans", price:30, start: 25 }
+                  ] 
+      }
 app.get   '/account'  , ensureAuthenticated                 , (req,res) -> res.render 'account', { user: req.user }
 app.get   '/password' , ensureAuthenticated                 , (req,res) -> res.render 'password', { user: req.user }
 app.post  '/password' , ensureAuthenticated                 , changePassword
@@ -46,6 +53,7 @@ app.post  '/login'    ,
   passport.authenticate 'local', 
     { successRedirect: '/'
     , failureRedirect: '/login' }
+    
 app.get   '/signup'   , (req,res) -> res.render 'signup'
 app.post  '/signup'   , 
   createUser, 
@@ -69,92 +77,96 @@ global.like = 0
 app.io.route 'ready', (req) -> 
   info 'new connection'
 
-app.io.route 'requestVideo', (req) ->
-  req.user 
+app.io.route 'room', {
+  ask: (req) ->
+    info 'room ask'
+    req.io.join req.session.room
+    req.io.emit 'room:reply', req.session.room
+  } 
 
-app.io.route 'test', (req) -> debug 'test received'
+app.io.route 'test', (req) -> debug "test received #{req.data}"
 
 app.io.route 'video', {
   # command ( order )
   play: (req) ->
     info 'play'
-    req.io.broadcast 'video:play'
+    req.io.room(req.session.room).broadcast 'video:play'
   ,
   pause: (req) ->
     info 'pause'
-    req.io.broadcast 'video:pause'
+    req.io.room(req.session.room).broadcast 'video:pause'
   ,
   next: (req) ->
     info 'next'
-    req.io.broadcast 'video:next'
+    req.io.room(req.session.room).broadcast 'video:next'
   ,
   prev: (req) ->
     info 'prev'
-    req.io.broadcast 'video:prev'
+    req.io.room(req.session.room).broadcast 'video:prev'
   ,
   volume: (req) ->
     info "volume: #{req.data}"
-    req.io.broadcast 'video:volume', req.data
+    req.io.room(req.session.room).broadcast 'video:volume', req.data
   ,
   current_time: (req) ->
     info "set current time #{req.data}"
-    req.io.broadcast 'video:current_time', req.data
+    req.io.room(req.session.room).broadcast 'video:current_time', req.data
   ,
   # info ( free to listen )
   time: (req) ->
-    req.io.broadcast 'video:time', req.data
+    req.io.room(req.session.room).broadcast 'video:time', req.data
   ,
   ended: (req) ->
     info 'ended'
-    req.io.broadcast 'video:ended' 
+    req.io.room(req.session.room).broadcast 'video:ended' 
   ,
   volume_change: (req) ->
     info "volume change: #{req.data}"
-    req.io.broadcast 'video:volume_change', req.data
+    req.io.room(req.session.room).broadcast 'video:volume_change', req.data
   ,
   duration_change: (req) ->
     info "duration_change: #{req.data}"
-    req.io.broadcast 'video:duration_change', req.data
+    req.io.room(req.session.room).broadcast 'video:duration_change', req.data
   ,
   loaded_metadata: (req) ->
     info "loaded_metadata"
-    req.io.broadcast 'video:loaded_metadata'
+    req.io.room(req.session.room).broadcast 'video:loaded_metadata'
   ,
   # query ( ask and reply pair )
   volume_ask: (req) ->
     info "volume ask"
-    req.io.broadcast 'video:volume_ask'
+    req.io.room(req.session.room).broadcast 'video:volume_ask'
   ,
   volume_reply: (req) ->
     info "volume reply #{req.data}"
-    req.io.broadcast 'video:volume_reply', req.data
+    req.io.room(req.session.room).broadcast 'video:volume_reply', req.data
   ,
   current_time_ask: (req) ->
     info 'current_time_ask'
-    req.io.broadcast 'video:current_time_ask'
+    req.io.room(req.session.room).broadcast 'video:current_time_ask'
   ,
   current_time_reply: (req) ->
     info "current_time_reply #{req.data}"
-    req.io.broadcast 'video:current_time_reply', req.data
+    req.io.room(req.session.room).broadcast 'video:current_time_reply', req.data
   ,
   duration_ask: (req) ->
     info 'duration ask'
-    req.io.broadcast 'video:duration_ask'
+    req.io.room(req.session.room).broadcast 'video:duration_ask'
   ,
   duration_reply: (req) ->
     info "duration_reply #{req.data}"
-    req.io.broadcast 'video:duration_reply', req.data
+    req.io.room(req.session.room).broadcast 'video:duration_reply', req.data
     
   ,
   like: (req) ->
     info 'like'
     global.like += 1;
-    req.io.broadcast 'video:like', global.like
+    req.io.room(req.session.room).broadcast 'video:like', global.like
 }
   
 
 
 #info app.routes
-port = process.env.PORT || 80
+port = process.env.PORT || 8080
 info "listening on #{port}"
 app.listen (port)
