@@ -4,9 +4,9 @@ use cinemode;
 
 -- ### Properties
 -- + single row table
-create table configuration(
+-- create table configuration(
   
-);
+-- );
 
 create table if not exists users(
   id                int           auto_increment,
