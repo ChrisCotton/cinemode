@@ -1,14 +1,19 @@
 mysql = require 'mysql'
 
-console.log 
-
 conn = mysql.createConnection(
   { host:     global.conf.mysql.host
   , user:     global.conf.mysql.user
   , database: global.conf.mysql.database
   , password: global.conf.mysql.password
   })
-conn.connect()
+conn.connect (err) ->
+  console.log err if err 
+  
+# ping the server to prevent connectino lost
+ping = () -> conn.query 'select id from users limit 1;', (err, rows) ->
+  console.log "ping mysql #{new Date().toString()}"  
+setInterval ping, 60*60*1000
+
 
 # callback :: Err -> Unknown -> IO ()
 conn.insert = (db, map, callback) ->

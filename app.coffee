@@ -6,7 +6,6 @@ app.http().io();
 global.conf = JSON.parse fs.readFileSync('./config/cinemode.conf')
 # info conf
 
-
 require './modules/misc'
 require './modules/conn'
 passport = require './modules/passport'
