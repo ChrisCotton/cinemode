@@ -8,9 +8,9 @@ Features
 
 Source
 ======
-The program is still under development. Currently, the branch **express.io** is the latest one. you can download it by issuing
+The program is still under development. Currently, the branch **master** is the latest one. you can download it by issuing
     
-    git clone  git@github.com:ChrisCotton/cinemode.git -b socket.io
+    git clone  git@github.com:ChrisCotton/cinemode.git -b master
 
 
 How to use
