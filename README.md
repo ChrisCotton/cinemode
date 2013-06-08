@@ -56,4 +56,4 @@ How to use
 ### Start ###
 In root directory
   
-    coffee app.coffee
+    sudo coffee app.coffee
