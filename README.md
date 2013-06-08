@@ -7,8 +7,9 @@ Features
 
 Source
 ======
-the branch **socket.io** is the latest one. you can download it by issuing
-> git clone  git@github.com:ChrisCotton/cinemode.git -b socket.io
+The program is still under development. Currently, the branch **express.io** is the latest one. you can download it by issuing
+
+    git clone  git@github.com:ChrisCotton/cinemode.git -b socket.io
 
 
 How to use
@@ -23,22 +24,33 @@ How to use
 
     mysql -u <user_name> -p < ./utility/setup_db.sql
     
-1.1 modify the mysql login information in modules/conn.coffee
+1.1 replace the mysql login information with yours in modules/conn.coffee
     
     ...
     conn = mysql.createConnection(
-      { host: 'localhost'
-      , user: 'admin'
+      { host:     'localhost'
+      , user:     'admin'
       , database: 'cinemode'
       , password: '123123123'})
     conn.connect()
     ...
+
+2. set up facebook login, replace the facebook app info with yours in modules/passport.coffee
+
+    ...
+    HOST                  = "http://digitalfood.me"
+    FACEBOOK_APP_ID       = "579460945427195"
+    FACEBOOK_APP_SECRET   = "46acd35a5b81f470c7912533573a34bf";
+    FACEBOOK_CALLBACK_URL = "http://digitalfood.me/auth/facebook/callback";
+    ...
     
-2. install node.js package, in root directory
+3. install node.js package, in root directory
 
     npm install -g coffee-script
     npm install 
     
     
 ### Start ###
-coffee app.coffee
+In root directory
+  
+    coffee app.coffee
