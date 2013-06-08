@@ -3,15 +3,16 @@ FacebookStrategy  = require('passport-facebook').Strategy;
 LocalStrategy     = require('passport-local').Strategy;
 
 # Passport
-# var FACEBOOK_APP_ID       = "579460945427195"
-# var FACEBOOK_APP_SECRET   = "46acd35a5b81f470c7912533573a34bf";
-# var FACEBOOK_CALLBACK_URL = "http://digitalfood.me/auth/facebook/callback";
+HOST                  = "http://digitalfood.me"
+FACEBOOK_APP_ID       = "579460945427195"
+FACEBOOK_APP_SECRET   = "46acd35a5b81f470c7912533573a34bf";
+FACEBOOK_CALLBACK_URL = "http://digitalfood.me/auth/facebook/callback";
 
 # for testing
-HOST                  = "http://byebyeprince.com"
-FACEBOOK_APP_ID       = "363076780460904"
-FACEBOOK_APP_SECRET   = "0a5daa96bed157945af97a1a0345f579"
-FACEBOOK_CALLBACK_URL = "http://byebyeprince.com/auth/facebook/callback"
+# HOST                  = "http://byebyeprince.com"
+# FACEBOOK_APP_ID       = "363076780460904"
+# FACEBOOK_APP_SECRET   = "0a5daa96bed157945af97a1a0345f579"
+# FACEBOOK_CALLBACK_URL = "http://byebyeprince.com/auth/facebook/callback"
 
 global.host = HOST
 
