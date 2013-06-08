@@ -1,0 +1,103 @@
+passport          = require 'passport'
+FacebookStrategy  = require('passport-facebook').Strategy;
+LocalStrategy     = require('passport-local').Strategy;
+
+# Passport
+FACEBOOK_APP_ID       = global.conf.facebook.app_id
+FACEBOOK_APP_SECRET   = global.conf.facebook.app_secret
+FACEBOOK_CALLBACK_URL = global.conf.facebook.callback_url
+
+
+# passport initialize
+passport.serializeUser( (user,done) -> done(null ,user.id) )
+
+passport.deserializeUser( (id,done) -> 
+  conn.cond1 'users', {id:id}, (err,usr) ->
+    if usr == undefined
+      throw new Error('unable to deserializeUser')
+    else
+      done(null, usr)
+)
+      
+passport.use( new FacebookStrategy(
+  { clientID: FACEBOOK_APP_ID
+  , clientSecret: FACEBOOK_APP_SECRET
+  , callbackURL: FACEBOOK_CALLBACK_URL
+  }
+  ,
+  (accessToken, refreshToken, profile, done) ->
+    email = profile.username + '@facebook.com'
+    # well, what should I use? 
+    # if others know it they can hack it using local login. 
+    # Use a random number?
+    # I should use the password_enable field
+    pwd   = "null"  
+    conn.cond1 'users', {email:email}, (err,user) ->
+      return done(null, user) if user
+      conn.insert 'users', { email:email, password_hash: sha256(pwd) }, (err) -> 
+        return done(err, false) if err
+        conn.cond1 'users', { email:email }, (err, usr) ->
+          return done(err, false) if err
+          done(null, usr)
+))
+
+passport.use( new LocalStrategy(
+  (email, pwd, done) -> 
+    conn.cond1 'users', {email:email}, (err, usr) -> 
+      return done err,  false if err
+      return done null, false unless usr
+      return done null, false if (sha256 pwd) != usr.password_hash
+      done(null, usr)
+        
+))
+
+global.authenticateLocal =  (req,res,next) ->
+  console.log 'local authenticating...'
+  passport.authenticate 'local', 
+    { successRedirect: '/'
+    , failureRedirect: '/login' }
+  next()
+
+global.ensureAuthenticated = (req,res,next) ->
+  if req.isAuthenticated()
+    next()
+  else
+    res.redirect('/login')
+
+global.createUser = (req,res,next) ->
+  info req.body 
+  email = req.body.email
+  pwd   = req.body.password
+  pwd_c = req.body.password_confirmation
+  
+  if pwd != pwd_c
+    res.render 'signup', { error: 'passwords do not match.' }
+  else
+    conn.cond1 'users', {email:email}, (err,usr) ->
+      if usr
+        res.render 'signup', { error: 'email already exists' }
+      else
+        conn.insert 'users', { email:email, password_hash: sha256(pwd) }, (err) ->
+          if err
+            res.render 'signup', { error: 'cannot create user' }
+          else 
+            next()  
+            
+global.changePassword = (req,res,next) ->
+  info req.user
+  original = req.body.original
+  pwd      = req.body.password
+  pwd_c    = req.body.password_confirmation
+  uid      = req.user.id
+  
+  conn.cond1 'users', { id:uid }, (err,usr) ->
+    next() if err
+    if usr.password_hash != sha256(original)
+      res.render 'password', {error: "wrong password"}
+    else if pwd != pwd_c
+      res.render 'password', {error: "passwords do not match."}
+    else
+      conn.update 'users', {password_hash: sha256(pwd)}, {id:uid}, () ->
+        res.redirect '/'
+        
+module.exports = passport

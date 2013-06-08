@@ -1,0 +1,570 @@
+!!! 5
+
+include shared
+include simpleCart
+
+html(lang="en")
+  head
+    title Control
+    
+    meta(charset="utf-8")
+    
+    mixin socketioH()
+    mixin jqueryH()
+    mixin jqueryuiH()
+    mixin bootstrapH()
+    mixin simpleCartH()
+    // mixin bootstrapSliderH()
+    script
+    //- style
+    //-   #cartPopover{
+    //-     position:absolute;
+    //-     width:218px;
+    //-     top:72px;
+    //-     right:14px;
+    //-     z-index:9999;
+    //-     display:none;
+        
+    //-     color:#fff;
+    //-     text-shadow:1px 1px 0 rgba(0,0,0,.8);
+    //-     font-family:"FreightSansMedium", sans-serif;
+        
+    //-     -webkit-border-radius:4px;
+    //-     -moz-border-radius:4px;
+    //-     border-radius:4px;
+    //-     border:1px solid #000;
+    //-     -webkit-box-shadow:inset 0 1px 0 rgba(255,255,255,.2),0 1px 3px rgba(0,0,0,.5);
+    //-     -moz-box-shadow:inset 0 1px 0 rgba(255,255,255,.2),0 1px 3px rgba(0,0,0,.5);
+    //-     box-shadow:inset 0 1px 0 rgba(255,255,255,.2),0 1px 3px rgba(0,0,0,.5);
+        
+    //-     background: #45484a; /* Old browsers */
+    //-     background: -moz-linear-gradient(top,  #45484a 0%, #2a2b2c 100%); /* FF3.6+ */
+    //-     background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#45484a), color-stop(100%,#2a2b2c)); /* Chrome,Safari4+ */
+    //-     background: -webkit-linear-gradient(top,  #45484a 0%,#2a2b2c 100%); /* Chrome10+,Safari5.1+ */
+    //-     background: -o-linear-gradient(top,  #45484a 0%,#2a2b2c 100%); /* Opera 11.10+ */
+    //-     background: -ms-linear-gradient(top,  #45484a 0%,#2a2b2c 100%); /* IE10+ */
+    //-     background: linear-gradient(top,  #45484a 0%,#2a2b2c 100%); /* W3C */
+    //-     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#45484a', endColorstr='#2a2b2c',GradientType=0 ); /* IE6-9 */
+    //-   }
+
+    //-   #triangle{
+    //-     position: absolute;
+    //-     left: 50%;
+    //-     margin-left: -12px;
+    //-     color: #45484A;
+    //-     top: -21px;
+    //-     font-size: 24px;
+    //-     text-shadow: 0 1px 0 #444749;
+    //-     -webkit-transform: scale(1.2,.8) translateY(1.5px);
+    //-     -moz-transform: scale(1.2,.8) translateY(1.5px);
+    //-     transform: scale(1.2,.8) translateY(1.5px);
+    //-   }
+    //-   #cartPopover .itemRow{
+    //-     border-bottom:1px solid #2B2D2E;
+    //-     border-top:1px solid #434547;
+    //-     padding:10px;
+    //-     height:12px;
+    //-   }
+    //-   #cartPopover .itemRow div{
+    //-     float:left;
+    //-   }
+    //-   #cartPopover .item-custom{
+    //-     width:35px;
+    //-     margin-right:6px;
+    //-   }
+    //-   #cartPopover .item-custom span{
+    //-     float:left;
+    //-     height:13px;
+    //-     display:inline-block;
+    //-     font-family:"Trebuchet MS", sans-serif;
+    //-     width:23px;
+    //-     text-align:right;
+    //-   }
+    //-   #cartPopover .item-custom div{
+    //-     float:left;
+    //-     height:13px;
+    //-     margin-left:3px;
+    //-   }
+    //-   #cartPopover .simpleCart_increment,
+    //-   #cartPopover .simpleCart_decrement{
+    //-     line-height:1;
+    //-     font-size:1px;
+    //-     display:block;
+    //-     height:5px;
+    //-     margin-top:3px;
+    //-   }
+    //-   #cartPopover .item-name{
+    //-     float:left;
+    //-     width:90px;
+    //-     white-space: nowrap;
+    //-       overflow: hidden;              
+    //-     text-overflow: ellipsis;
+    //-   }
+    //-   #cartPopover .itemRow .item-total{
+    //-     float:right;
+    //-   }
+    //-   #cartData{
+    //-     background:#232425;
+    //-     padding:10px;
+    //-   }
+    //-   #cartData strong{
+    //-     font-family:"FreightSans", sans-serif;
+    //-   }
+    //-   #popoverButtons{
+    //-     padding:10px;
+    //-   }
+    //-   #cartPopover strong{
+    //-     color:#fff;
+    //-   }
+    //-   .hudbtn{
+    //-     -webkit-border-radius:3px;
+    //-     -moz-border-radius:3px;
+    //-     border-radius:3px;
+    //-     font:bold 13px/26px "FreightSans", sans-serif;
+    //-     color:#d9d9d9;
+    //-     text-shadow:1px 1px 1px rgba(0,0,0,.5);
+    //-     padding:0 12px;
+    //-     height:24px;
+    //-     border:1px solid #000;
+    //-     -webkit-box-shadow:inset 0 1px 0 #6d6d6e;
+    //-     -moz-box-shadow:inset 0 1px 0 #6d6d6e;
+    //-     box-shadow:inset 0 1px 0 #6d6d6e;
+        
+    //-     background: #3a3a3b; /* Old browsers */
+    //-     background: -moz-linear-gradient(top,  #3a3a3b 0%, #343434 100%); /* FF3.6+ */
+    //-     background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#3a3a3b), color-stop(100%,#343434)); /* Chrome,Safari4+ */
+    //-     background: -webkit-linear-gradient(top,  #3a3a3b 0%,#343434 100%); /* Chrome10+,Safari5.1+ */
+    //-     background: -o-linear-gradient(top,  #3a3a3b 0%,#343434 100%); /* Opera 11.10+ */
+    //-     background: -ms-linear-gradient(top,  #3a3a3b 0%,#343434 100%); /* IE10+ */
+    //-     background: linear-gradient(top,  #3a3a3b 0%,#343434 100%); /* W3C */
+    //-     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#3a3a3b', endColorstr='#343434',GradientType=0 ); /* IE6-9 */
+        
+    //-   }
+    //-   .hudbtn:hover{
+    //-     background: #2f2f30; /* Old browsers */
+    //-     background: -moz-linear-gradient(top,  #2f2f30 0%, #282828 100%); /* FF3.6+ */
+    //-     background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#2f2f30), color-stop(100%,#282828)); /* Chrome,Safari4+ */
+    //-     background: -webkit-linear-gradient(top,  #2f2f30 0%,#282828 100%); /* Chrome10+,Safari5.1+ */
+    //-     background: -o-linear-gradient(top,  #2f2f30 0%,#282828 100%); /* Opera 11.10+ */
+    //-     background: -ms-linear-gradient(top,  #2f2f30 0%,#282828 100%); /* IE10+ */
+    //-     background: linear-gradient(top,  #2f2f30 0%,#282828 100%); /* W3C */
+    //-     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#2f2f30', endColorstr='#282828',GradientType=0 ); /* IE6-9 */
+    //-   }
+    //-   .hudbtn:active{
+    //-     -webkit-box-shadow:none;
+    //-     -moz-box-shadow:none;
+    //-     box-shadow:none;
+    //-     background: #282828; /* Old browsers */
+    //-     background: -moz-linear-gradient(top,  #282828 0%, #2f2f30 100%); /* FF3.6+ */
+    //-     background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#282828), color-stop(100%,#2f2f30)); /* Chrome,Safari4+ */
+    //-     background: -webkit-linear-gradient(top,  #282828 0%,#2f2f30 100%); /* Chrome10+,Safari5.1+ */
+    //-     background: -o-linear-gradient(top,  #282828 0%,#2f2f30 100%); /* Opera 11.10+ */
+    //-     background: -ms-linear-gradient(top,  #282828 0%,#2f2f30 100%); /* IE10+ */
+    //-     background: linear-gradient(top,  #282828 0%,#2f2f30 100%); /* W3C */
+    //-     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#282828', endColorstr='#2f2f30',GradientType=0 ); /* IE6-9 */
+    //-   }
+    //-   .hudbtn.primary{
+    //-     border-color:#3D7530;
+    //-     background: #97c865; /* Old browsers */
+    //-     background: -moz-linear-gradient(top,  #97c865 0%, #44933d 100%); /* FF3.6+ */
+    //-     background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#97c865), color-stop(100%,#44933d)); /* Chrome,Safari4+ */
+    //-     background: -webkit-linear-gradient(top,  #97c865 0%,#44933d 100%); /* Chrome10+,Safari5.1+ */
+    //-     background: -o-linear-gradient(top,  #97c865 0%,#44933d 100%); /* Opera 11.10+ */
+    //-     background: -ms-linear-gradient(top,  #97c865 0%,#44933d 100%); /* IE10+ */
+    //-     background: linear-gradient(top,  #97c865 0%,#44933d 100%); /* W3C */
+    //-     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#97c865', endColorstr='#44933d',GradientType=0 ); /* IE6-9 */
+    //-     -webkit-box-shadow:inset 0 1px 0 #D8E994;
+    //-     -moz-box-shadow:inset 0 1px 0 #D8E994;
+    //-     box-shadow:inset 0 1px 0 #D8E994;
+    //-     color:#fff;
+    //-   }
+    //-   .hudbtn.primary:hover{
+    //-     background: #91bf61; /* Old browsers */
+    //-     background: -moz-linear-gradient(top,  #91bf61 0%, #3f8738 100%); /* FF3.6+ */
+    //-     background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#91bf61), color-stop(100%,#3f8738)); /* Chrome,Safari4+ */
+    //-     background: -webkit-linear-gradient(top,  #91bf61 0%,#3f8738 100%); /* Chrome10+,Safari5.1+ */
+    //-     background: -o-linear-gradient(top,  #91bf61 0%,#3f8738 100%); /* Opera 11.10+ */
+    //-     background: -ms-linear-gradient(top,  #91bf61 0%,#3f8738 100%); /* IE10+ */
+    //-     background: linear-gradient(top,  #91bf61 0%,#3f8738 100%); /* W3C */
+    //-     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#91bf61', endColorstr='#3f8738',GradientType=0 ); /* IE6-9 */
+    //-   }
+    //-   .hudbtn.primary:active{
+    //-     background: #3f8738; /* Old browsers */
+    //-     background: -moz-linear-gradient(top,  #3f8738 0%, #91bf61 100%); /* FF3.6+ */
+    //-     background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#3f8738), color-stop(100%,#91bf61)); /* Chrome,Safari4+ */
+    //-     background: -webkit-linear-gradient(top,  #3f8738 0%,#91bf61 100%); /* Chrome10+,Safari5.1+ */
+    //-     background: -o-linear-gradient(top,  #3f8738 0%,#91bf61 100%); /* Opera 11.10+ */
+    //-     background: -ms-linear-gradient(top,  #3f8738 0%,#91bf61 100%); /* IE10+ */
+    //-     background: linear-gradient(top,  #3f8738 0%,#91bf61 100%); /* W3C */
+    //-     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#3f8738', endColorstr='#91bf61',GradientType=0 ); /* IE6-9 */
+    //-     -webkit-box-shadow:none;
+    //-     -moz-box-shadow:none;
+    //-     box-shadow:none;
+    //-   }
+    style
+      * {
+        padding: 0px;
+        margin: 0px;
+      }
+      
+      body{
+        width: 100%;
+        overflow-x: hidden;
+      }
+      .item_desc{
+        width:700px;
+      }
+      #product_img_list {
+        position: absolute;
+        display: block;
+        left: -100px;
+        width: 10000px;
+        height: 400px; 
+        overflow-x: hidden;
+        overflow-y: hidden;
+        white-space: nowrap; /* for singel line T^T */
+        padding: 0px;
+        margin: 0px;
+      }
+      #product_img_list li{
+        display: inline;
+        list-style-type: none;
+        border: 0px solid black;
+        padding:0px;
+        margin: 0px;
+      }  
+      .product{
+        display: inline-block;
+        width: 400px;
+        height: 280px;
+        text-align: center;
+        
+        -webkit-transition: all 0.25s ease;
+        -moz-transition: all 0.25s ease;
+        -o-transition: all 0.25s ease;
+        -ms-transition: all 0.25s ease;
+        transition: all 0.25s ease;
+      }
+      
+      .product_img{
+        width: 160px;
+        height:160px;
+        margin: 60px 80px;
+        padding: 0px;
+        
+        /*
+        border: 1px solid #ccc; 
+        -webkit-border-radius: 5px;
+        -moz-border-radius: 5px;
+        border-radius: 5px;
+        */
+        -webkit-transition: all 0.25s ease;
+        -moz-transition: all 0.25s ease;
+        -o-transition: all 0.25s ease;
+        -ms-transition: all 0.25s ease;
+        transition: all 0.25s ease;
+        
+        /*
+        filter: saturate(20%);
+        -webkit-filter: saturate(20%);
+        -moz-filter: saturate(20%);
+        -o-filter: saturate(20%);
+        -ms-filter: saturate(20%);
+        */
+      }
+      
+      .product_img:hover {
+        -webkit-transform: scale(1.5);
+        -moz-transform: scale(1.5);
+        -o-transform: scale(1.5);
+        -ms-transform: scale(1.5);
+        transform: scale(1.5);
+        cursor: pointer;
+         
+        filter: saturate(100%);
+        -webkit-filter: saturate(100%);
+        -moz-filter: saturate(100%);
+        -o-filter: saturate(100%);
+        -ms-filter: saturate(100%);
+        
+        /*
+        -webkit-box-shadow: 0px 0px 5px rgba(0,0,0,0.2);
+        -moz-box-shadow: 0px 0px 5px rgba(0,0,0,0.2);
+        box-shadow: 0px 0px 5px rgba(0,0,0,0.2);
+        */
+      }
+      
+      #control {
+        position:absolute;
+        top: 580px;
+        width:100%;
+      }
+      
+      .headerRow th {
+        margin-right: 5px;
+      }
+      
+      table {
+        max-width: 100%;
+        background-color: transparent;
+        border-collapse: collapse;
+        border-spacing: 0;
+      }
+
+      table {
+        width: 100%;
+        margin-bottom: 20px;
+      }
+
+      table th,
+      table td {
+        padding: 8px;
+        line-height: 20px;
+        text-align: left;
+        vertical-align: top;
+        border-top: 1px solid #dddddd;
+      }
+
+      table th {
+        font-weight: bold;
+      }
+  body   
+    //- p#room room: 
+    div(style="padding: 40px; ")
+        
+    div(style="position:relative;")
+      //- div(style="position:absolute; ")
+      ul#product_img_list
+        //- each p, i in products
+        //-   li 
+        //-     mixin product(i,p)  
+    div#control
+      div(style="position:static; margin:0px auto; width:400px")
+        
+        p#time(style="display:inline-block;")
+        #volume_slider(style="display:inline-block; margin:5px 0px; width:40px; float:right")
+          
+        #time_slider(style="width:400px; margin: 7px 0px;")
+          
+        .btn-group(style="display:inline-block;")
+          a.btn(onclick="remote_video_prev()", href="#")
+            i.icon-step-backward
+          a.btn(onclick="remote_video_play()", href="#") 
+            i.icon-play
+          button.btn(onclick="remote_video_pause()", href="#") 
+            i.icon-pause
+          button.btn(onclick="remote_video_next()", href="#") 
+            i.icon-step-forward
+          //- button.btn(onclick="remote_video_like()", href="#") 
+          //-   i.icon-thumbs-up
+          //- .simpleCart_items
+        a#items_btn.btn.pull-right.cartInfo.open(href="javascript:;")  
+          span.simpleCart_quantity
+          | &nbsp;items
+        br
+        br
+        .cartPopover.pull-right
+          //- div#triangle &#x25B2;
+          div.simpleCart_items
+          div#cartData.clearfix
+            div.pull-left
+              strong Items: 
+              span.simpleCart_quantity
+            div.pull-right
+              string Total: 
+              span.simpleCart_total
+
+          div#popoverButtons.pull-right
+            //- a.hudbtn.left(href="/cart/") View
+            a.simpleCart_checkout.btn.btn-small.primary.right(href="javascript:;") Checkout
+
+
+        //- p#info
+        //- input(id='testpos', type='text', value='1')
+        //- button(id='additem') test
+        //- button(onclick="socket.emit('video:volume_ask')") vol
+    script
+      var products = !{JSON.stringify(products )} ;
+    
+    :coffeescript
+      $('#additem').on 'click', ()->
+        simpleCart.add({ 
+          name: "Cool T-Shirt" ,
+          price: 45.99 ,
+          size: "Small" ,
+          quantity: 3
+        });
+        
+      
+        
+    :coffeescript
+      this.tag = (n, inner) -> 
+        x = $( document.createElement(n) )
+        return x if(typeof inner == 'undefined')
+        if( Array.isArray inner ) 
+          for i in inner 
+            x.append i
+        else
+          x.append inner
+        return x  
+      
+      this.spanTag = (inner) -> tag('span',inner)
+      this.divTag = (inner) -> tag('div',inner)
+      this.pTag = (inner) -> tag('p', inner)
+      this.brTag = () -> tag('br')
+      
+      this.mkLikeBtn = (n) ->
+        p   = tag('p').html("#{n} &nbsp;")
+        p.css('display', 'inline-block')
+        btn = tag('a').addClass('btn-link').text('Likes')
+        btn.on 'click', () ->
+          btn.text('Liked')
+          p.html "#{n+1} &nbsp;"
+        divTag().append(p).append(btn)
+          
+    :coffeescript
+      this.socket         = io.connect()
+      this.time_slider    = $('#time_slider')
+      this.time_p         = $('p#time')
+      this.volume_slider  = $('#volume_slider')
+      this.product_img_list = $('#product_img_list')
+      this.info           = $('p#info')
+      
+      products.forEach (p,i) -> 
+        d = divTag().addClass('product')
+        add = (tag 'a').addClass('btn-link').text('add to cart')
+        add.on 'click', () ->
+          simpleCart.add({
+              name: p.name
+            , price: p.price
+            , quantity: 1
+            })
+        
+        d.append (tag 'img').addClass('product_img').attr('src', p.img)
+        d.append pTag(p.name)
+        d.append pTag("$ #{p.price}")
+        d.append mkLikeBtn( (101*i + 7) % 53 + 19)
+        d.append add
+        
+        product_img_list.append tag('li', d)
+      
+      cart = $('.cartPopover')
+      cart.hide()
+      cartShown = false
+      $('#items_btn').on 'click', () ->
+        if cartShown 
+          cart.hide()
+          cartShown = false 
+        else 
+          cart.show()
+          cartShown = true
+        
+      
+      this.centralize = (nth) ->
+        sw = $(window).width()
+        pos = sw/2 - (400*nth) + 200
+        # alert "#{sw} #{nth} #{pos}"
+        # enlarge center image
+        ###
+        cs = product_img_list.children()
+        cs.forEach (c,i) ->
+          alert 'work'
+          img = c.child[0].child[0]
+          alert (typeof img)
+          if(i == nth)
+            img.css('width', 200).css('height', 200)
+          else
+            img.css('width', 160).css('height', 160) 
+        ###     
+        product_img_list.animate( {left: pos}, 'fast' )
+      
+      this.setVolume = (v) -> 
+        volume_slider.slider "option", "value", Math.round(100*v)
+      
+      this.setTime = (t) ->
+        time_slider.slider "option", "value", t
+      
+      this.setDuration = (d) ->
+        time_slider.slider "option", "max", d
+        
+      this.getDuration = () ->
+        time_slider.slider "option", "max"
+      
+      secToMin = (s) ->
+        m = Math.floor( s / 60 )
+        s = Math.round( s % 60 )
+        s = "0" + s if s < 10
+        "#{m}:#{s}"
+      
+      this.setTimeP = (t) ->
+        time_p.text ( secToMin(t) + "/" + secToMin( getDuration() ) )
+        
+      # setup widget
+      this.timeControlMode = false
+      time_slider.slider { 
+        min: 0 
+        , 
+        start: () -> timeControlMode = true
+        , 
+        stop:  () -> timeControlMode = false
+        ,
+        slide: (ev, ui) ->
+          setTimeP ui.value
+          socket.emit 'video:current_time', ui.value
+        ,
+        change: (ev,ui) ->
+          pos = $(document).width() - 110*products.length
+          # product_img_list.css('left', 0 )
+        }
+      socket.emit 'video:duration_ask'
+      
+      
+      volume_slider.slider { 
+        max: 100
+        , 
+        min: 0
+        , 
+        step: 1
+        , 
+        slide: (ev,ui) -> 
+          socket.emit 'video:volume', ui.value / 100
+        }
+      socket.emit 'video:volume_ask'
+      
+      # command
+      this.remote_video_play  = () -> socket.emit 'video:play'
+      this.remote_video_pause = () -> socket.emit 'video:pause'
+      this.remote_video_stop  = () -> socket.emit 'video:stop'
+      this.remote_video_like  = () -> socket.emit 'video:like'
+      this.remote_video_next  = () -> socket.emit 'video:next'
+      this.remote_video_prev  = () -> socket.emit 'video:prev'
+      
+      # info
+      #socket.on 'video:ended', () -> socket.emit 'video:duration_ask'
+      socket.on 'video:loaded_metadata', () -> socket.emit 'video:duration_ask'
+      socket.on 'video:volume_change', (v) -> setVolume v
+      # 
+      socket.on 'video:duration_reply', (d) -> setDuration d
+      socket.on 'video:volume_reply', (v) -> setVolume v
+        
+    :coffeescript
+      socket.on 'video:time', (t) ->
+        if ! timeControlMode
+          setTimeP t # set time text
+          setTime t  # set slider
+        
+        b = true
+        for i in [1..products.length-1]
+          # alert "#{products[i].start} #{t} #{products[i].start}"
+          if products[i-1].start <= t < products[i].start
+            centralize i
+            b = false
+            break
+        if b
+          centralize products.length
+      
+    :coffeescript
+      # alert "#{Object.keys products[0]}"
+      socket.on 'room:reply', (data) -> $('#room').append data
+      socket.emit 'room:ask'
+      socket.emit 'ready'

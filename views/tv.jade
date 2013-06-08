@@ -1,0 +1,135 @@
+!!! 5
+
+include shared
+
+html
+  head
+    title TV
+    meta(charset="utf-8")
+    
+    mixin socketioH()
+    mixin jqueryH()
+    mixin bootstrapH()
+    mixin videojsH()
+    script
+      _V_.options.flash.swf = "video-js.swf";
+      
+  body
+    .container
+      .navbar
+        .navbar-inner
+          .container
+            a.brand(href="/")  Cinemode
+            ul.nav.pull-right
+              li
+                a(href="/account") hi, #{user.email}
+              li
+                a(href="/logout") logout
+      .div( style="width:800px; margin: 0px auto;" )      
+        video#player.video-js.vjs-default-skin( 
+          id="player" 
+          controls="true" 
+          autoplay="true"
+          preload="auto" 
+          width="800"
+          height="450" 
+          poster="http://placehold.it/800x450" 
+          data-setup="{}")
+          source#video_src
+          //- source( src="/movie.mp4" type='video/mp4')
+          //- source( src="http://video-js.zencoder.com/oceans-clip.webm" type='video/webm')
+          //- track( kind="captions" src="demo.captions.vtt" srclang="en" label="English" )
+        //- #banner1.banner
+        //-   p It is now showing T-shirt
+        //- #banner2.banner
+        //-   p It is now showing Cap
+        //- #banner3.banner
+        //-   p It is now showing Shoes
+          
+        a(href="/tablet", target="_blank") video control
+        
+        //- button(onclick="videoPrev()") prev 
+        //- button(onclick="videoNext()") next
+        //- button(onclick="alert('' + player.volume())") vol
+        //- button(onclick="video_play()")  play
+        //- button(onclick="video_pause()") pause
+        //- button.btn(onclick="socket.emit('test',{})") test
+        //- p#info something
+        
+    :coffeescript
+      
+      curr_src = 0
+      src = [ { src:'http://video-js.zencoder.com/oceans-clip.webm', type:'video/webm'}
+            # , { src:'http://upload.wikimedia.org/wikipedia/en/5/5b/Cobalt_Drafting_Assistant_demo.ogv', type:'video/ogg'}
+            , { src:'http://mirror.cessen.com/blender.org/peach/trailer/trailer_iphone.m4v', type:'video/mp4'}
+            ]
+            
+      $('#video_src').attr('src', src[curr_src]['src']).attr('type', src[curr_src]['type'])
+      this.player = videojs "player"
+      
+      this.videoPrev = () ->
+        curr_src = (curr_src + src.length - 1) % src.length
+        player.src src[curr_src]
+        
+      this.videoNext = () ->
+        curr_src = (curr_src + 1) % src.length
+        player.src src[curr_src]
+        
+      # player events
+      player.on 'ended', () ->
+        videoNext()
+        socket.emit 'video:ended'
+      
+      player.on 'loadedmetadata', () ->
+        socket.emit 'video:loaded_metadata'  
+        
+      player.on 'volumechange', () ->
+        socket.emit 'video:volume_change', player.volume()
+      
+    :coffeescript
+      this.socket = io.connect()
+      
+      
+      socket.on 'room:reply', (data) -> $('#room').append data
+      
+      socket.on 'video:play',  () -> player.play()
+      socket.on 'video:pause', () -> player.pause()
+      socket.on 'video:stop',  () -> player.stop()
+      socket.on 'video:next',  () -> videoNext()
+      socket.on 'video:prev',  () -> videoPrev()
+      socket.on 'video:current_time', (t) -> player.currentTime t
+      socket.on 'video:volume', (vol) -> player.volume(vol)
+      socket.on 'video:like', (cnt) -> 
+        $('#like_cnt').text(cnt)
+        
+      socket.on 'video:volume_ask', () -> 
+        socket.emit 'video:volume_reply', player.volume()
+      
+      socket.on 'video:duration_ask', () -> 
+        socket.emit 'video:duration_reply', player.duration()
+        
+      socket.on 'video:current_time_ask', () ->
+        socket.emit 'video:current_time_reply', player.currentTime()
+      
+    :coffeescript
+      $("div.banner").hide()
+      
+      wrap = (cb, a, b ) -> cb b, a 
+      timer = wrap setInterval, 230, () ->
+        t = player.currentTime()
+        $('#info').text(t)
+        
+        $('.banner').hide()
+        if( t < 0 )
+          # unexpected
+        else if( t <= 10 )
+          $('div#banner1').show()
+        else if( t <= 20 )
+          $('div#banner2').show()
+        else
+          $('div#banner3').show()
+          
+        socket.emit 'video:time', t
+        
+      socket.emit 'room:ask'
+      socket.emit 'ready'

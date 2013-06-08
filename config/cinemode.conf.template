@@ -1,0 +1,17 @@
+{
+  "host":
+    "http://XXXX.com"
+  ,
+  "facebook" : 
+    { "app_id"        : "111111111111111"
+    , "app_secret"    : "00000000000000000000000000000000"
+    , "callback_url"  : "http://XXXX.com/auth/facebook/callback"
+    }
+  ,
+  "mysql" :
+    { "host" : "XXXX"
+    , "user" : "XXXX"
+    , "database" : "cinemode"
+    , "password" : "XXXXXX"
+    }
+}

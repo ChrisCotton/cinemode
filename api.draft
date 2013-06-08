@@ -1,0 +1,38 @@
+getVideoList :: User -> IO ( err, [Video] )
+
+requestRoomForVideo :: Video -> IO ( err, Room )
+
+getVideoInRoom :: Room -> Video
+
+joinRoom  :: Room -> User -> IO ( err, Bool )
+leaveRoom :: Room -> User -> IO ( err )
+
+data Video =
+  { description   :: Text
+  , poster_url    :: Url
+  , url           :: Url
+  , format        :: Format
+  }
+  
+data Products_in_Videos = Set Product Video StartTime EndTime
+  
+data Product = 
+  { name 
+  , description
+  , like_count
+  , price
+  , image_url
+  }
+
+data RoomType = Both | Control | Boardcast | Customer
+
+data Room = 
+  { type  :: RoomType 
+  , video :: Video
+  }
+
+-- signal in between joinRoom and leaveRoom is application dependent
+-- signal is authenficated by server. depend on User, type of room 
+
+
+-- the meaning of interface is to allow changes.

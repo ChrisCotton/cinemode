@@ -1,0 +1,38 @@
+!!! 5
+
+include shared
+
+html
+  head
+    title Account
+    
+    mixin jqueryH()
+    mixin bootstrapH()
+    
+  body
+    .container
+      .navbar
+        .row
+          .navbar-inner
+            a.brand(href="/")  Cinemode
+            ul.nav.pull-right
+              li
+                a(href="/logout") logout
+    div(style="width: 200px; margin: 0px auto;")
+      img(src="http://placehold.it/200x200")
+      - if(user.email)
+        p Email: #{user.email}
+      a(href='/password') change password
+
+    p#info
+    script
+      var user = !{ JSON.stringify(user) }      
+    :coffeescript
+      info = $('p#info')
+      
+      printObj = (obj) ->
+        ks = Object.keys obj
+        ls = ks.map( (k) -> "#{k}=#{obj[k]}" ) 
+        ls.join ' ' 
+        
+      #info.text ( printObj user ) 
