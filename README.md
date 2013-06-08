@@ -18,6 +18,7 @@ How to use
 
 ### prerequisite ###
 1. mysql (or mariadb)
+2. facebook developer account
 
 
 ### Setup/Installation ###
