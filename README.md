@@ -23,12 +23,15 @@ How to use
 
 ### Setup/Installation ###
 1. set up database, replace <user_name> with you mysql admin name
-
+    
+      ```
       mysql -u <user_name> -p < ./utility/setup_db.sql
+      ```
     
 2. copy config/cinemode.conf.template to config/cinemode.conf
    fill in all the missing info.
 
+      ```javascript
       {
         "host":
           "http://XXXX.com"
@@ -46,15 +49,18 @@ How to use
           , "password" : "XXXXXX"
           }
       }
+      ```
 
     
 4. install node.js package, in root directory
-    
+      
+      ```
       npm install -g coffee-script
       npm install 
-    
+      ```
     
 ### Start ###
 In root directory
   
     sudo coffee app.coffee
+      
