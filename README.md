@@ -23,32 +23,34 @@ How to use
 ### Setup/Installation ###
 1. set up database, replace <user_name> with you mysql admin name
 
-    mysql -u <user_name> -p < ./utility/setup_db.sql
+      mysql -u <user_name> -p < ./utility/setup_db.sql
     
-2. replace the mysql login information with yours in modules/conn.coffee
-    
-    ...
-    conn = mysql.createConnection(
-      { host:     'localhost'
-      , user:     'admin'
-      , database: 'cinemode'
-      , password: '123123123'})
-    conn.connect()
-    ...
+2. copy config/cinemode.conf.template to config/cinemode.conf
+   fill in all the missing info.
 
-3. set up facebook login, replace the facebook app info with yours in modules/passport.coffee
-    
-    ...
-    HOST                  = "http://digitalfood.me"
-    FACEBOOK_APP_ID       = "579460945427195"
-    FACEBOOK_APP_SECRET   = "46acd35a5b81f470c7912533573a34bf";
-    FACEBOOK_CALLBACK_URL = "http://digitalfood.me/auth/facebook/callback";
-    ...
+      {
+        "host":
+          "http://XXXX.com"
+        ,
+        "facebook" : 
+          { "app_id"        : "111111111111111"
+          , "app_secret"    : "00000000000000000000000000000000"
+          , "callback_url"  : "http://XXXX.com/auth/facebook/callback"
+          }
+        ,
+        "mysql" :
+          { "host" : "XXXX"
+          , "user" : "XXXX"
+          , "database" : "cinemode"
+          , "password" : "XXXXXX"
+          }
+      }
+
     
 4. install node.js package, in root directory
     
-    npm install -g coffee-script
-    npm install 
+      npm install -g coffee-script
+      npm install 
     
     
 ### Start ###

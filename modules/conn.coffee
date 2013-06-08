@@ -1,10 +1,13 @@
 mysql = require 'mysql'
 
+console.log 
+
 conn = mysql.createConnection(
-  { host: 'localhost'
-  , user: 'admin'
-  , database: 'cinemode'
-  , password: '123123123'})
+  { host:     global.conf.mysql.host
+  , user:     global.conf.mysql.user
+  , database: global.conf.mysql.database
+  , password: global.conf.mysql.password
+  })
 conn.connect()
 
 # callback :: Err -> Unknown -> IO ()

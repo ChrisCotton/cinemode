@@ -1,6 +1,11 @@
+fs        = require 'fs'
 express   = require 'express.io'
 app = express()
 app.http().io();
+
+global.conf = JSON.parse fs.readFileSync('./config/cinemode.conf')
+# info conf
+
 
 require './modules/misc'
 require './modules/conn'
@@ -167,6 +172,6 @@ app.io.route 'video', {
 
 
 #info app.routes
-port = process.env.PORT || 3500
+port = process.env.PORT || 80
 info "listening on #{port}"
 app.listen (port)
