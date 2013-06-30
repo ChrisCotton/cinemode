@@ -1,6 +1,7 @@
 create database if not exists cinemode;
 
-use cinemode;
+-- use cinemode;
+use cmode_db;
 
 -- ### Properties
 -- + single row table
@@ -25,7 +26,8 @@ create table if not exists products(
   name          varchar(50)     not null,
   price         double          not null, 
   image_url     text            not null,
-  description   text            default "",
+--  description   text            default "Howdy",
+  description   text,
   like_count    int             default 0,    -- cache for users_like_products
   
   primary key(id)

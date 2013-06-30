@@ -1,0 +1,204 @@
+<!doctype html>
+<html>
+  
+  <head>
+    <title>Carousel Test</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="css/bootstrap-responsive.css">
+    <!-- <link rel="stylesheet" href="https://djyhxgczejc94.cloudfront.net/builds/80037b02082b29f5f9cea127cab2a4ba4365ec67.css"> -->
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+
+    <!-- fancybox -->
+    <script type="text/javascript" src="../fbox/source/jquery.fancybox.js"></script>
+    <link type="text/css" rel="stylesheet" href="../fbox/source/helpers/jquery.fancybox-buttons.css" />
+    <script type="text/javascript" src="../fbox/source/helpers/jquery.fancybox-buttons.js"></script>
+    <link type="text/css" rel="stylesheet" href="../fbox/source/helpers/jquery.fancybox-thumbs.css" />
+    <script type="text/javascript" src="../fbox/source/helpers/jquery.fancybox-thumbs.js"></script>
+    <link type="text/css" rel="stylesheet" href="../fbox/source/jquery.fancybox.css" />
+    <script type="text/javascript" src="../fbox/source/jquery.fancybox.pack.js"></script>
+    <script type="text/javascript" src="../fbox/source/helpers/jquery.fancybox-media.js"></script>
+    <script type="text/javascript">
+    
+    $(document).ready(function() {
+      /*
+       *  Simple image gallery. Uses default settings
+       */
+
+      $('.fancybox').fancybox();
+
+      $("#fancybox-manual-a").click(function() {
+        $.fancybox.open('../fbox/demo/1_b.jpg');
+      });
+
+      $("#fancybox-manual-b").click(function() {
+      $.fancybox.open({
+        href : '../fbox/demo/iframe.html',
+        type : 'iframe',
+        padding : 5
+        });
+      });
+
+      $('.fancybox-media')
+        .attr('rel', 'media-gallery')
+        .fancybox({
+          openEffect : 'none',
+          closeEffect : 'none',
+          prevEffect : 'none',
+          nextEffect : 'none',
+
+          arrows : false,
+          helpers : {
+            media : {},
+            buttons : {}
+          }
+          });
+       });
+    </script>
+
+
+    <!-- fancybox -->
+  </head>
+  
+  <body>
+    <div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="brand" href="#">Your Company</a>
+          <div class="navbar-content">
+            <ul class="nav ">
+              <li class="active">
+                <a href="#">Home</a> 
+              </li>
+              <li>
+                <a href="#">About</a> 
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="hero-unit hidden-phone">
+        <h1>Welcome to Your App!</h1>
+        <p>We do amazing things that will make you want to give us money. Lots of
+          money.</p>
+        <p>
+          <a class="btn btn-large btn-inverse" href="#"><span class="btn-label">Sign Up Today!</span></a> 
+        </p>
+      </div>
+      <a class="btn btn-large btn-primary btn-block visible-phone" href="#"><span class="btn-label">Sign Up Today!</span></a>
+      <div class="row span12">
+        <!-- Simple implementation of Carousel testimonial -->
+<!--         <div id="testimonials" class="section-dark row-fluid">
+          <div class="container">
+            <h2 class="section-heading">
+              <span>What our users are saying</span> 
+            </h2>
+            <div id="testimonial-carousel" class="carousel slide">
+            
+              <div class="carousel-inner">
+                <div class="active item">
+                  <div class="testimonial pull-left">
+                    <div class="content">Photoshop is too heavy, mockup software is too light, but Easel is just
+                      right. Our team relies on it to communicate and iterate quickly. We went
+                      from a barely-working prototype to a profitable
+                      <a href="https://www.vayable.com/custom">travel planning</a> business with Easel. Highly recommended!
+                      <i class="icon icon-caret-down"></i> 
+                    </div>
+                    <div class="meta">
+                      <img alt="Jamiewong" class="pull-left image" src="https://d2xe2j4d6y293d.cloudfront.net/assets/static/testimonials/jamiewong-1911126838683b0234ef56d4362cccf5.png">
+                      <div class="name">Jamie Wong</div>
+                      <div class="title">CEO
+                        <a href="https://www.vayable.com">Vayable</a> 
+                      </div>
+                    </div>
+                  </div>
+                  <div class="testimonial pull-right">
+                    <div class="content">We love your service and are able to do a ton of rapid prototyping on
+                      it. Being able to work this collaboratively and share previews is incredibly
+                      valuable.
+                      <i class="icon icon-caret-down"></i> 
+                    </div>
+                    <div class="meta">
+                      <img alt="Stevenstreisguth" class="pull-left image" src="https://d2xe2j4d6y293d.cloudfront.net/assets/static/testimonials/stevenstreisguth-264c7c4130116fc2c0c08eda02eb4dfd.png">
+                      <div class="name">Steven Streisguth</div>
+                      <div class="title">Designer at
+                        <a href="http://squareknot.com/">Squareknot</a> 
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="item">
+                  <div class="testimonial pull-left">
+                    <div class="content">Til I tried
+                      <a href="https://www.twitter.com/easelapp">@easelapp</a> , I didn't realized how little love I'd been getting/expecting from web
+                      design tools. Not perfect but damn good.
+                      <i class="icon icon-caret-down"></i> 
+                    </div>
+                    <div class="meta">
+                      <img alt="Mollyclare1" class="pull-left image" src="https://d2xe2j4d6y293d.cloudfront.net/assets/static/testimonials/mollyclare1-8381235f6b34619e89e5ae4b6d40b36b.png">
+                      <div class="name">Molly Clare</div>
+                      <div class="title">Design Lecturer
+                        <a href="http://dschool.stanford.edu/">Stanford D-School</a> 
+                      </div>
+                    </div>
+                  </div>
+                  <div class="testimonial pull-right">
+                    <div class="content">Been using
+                      <a href="https://www.twitter.com/easelapp">@easelapp</a> for prototyping in the browser recently. Recommended for designers / learners
+                      / non-coders. Also, excellent support!
+                      <i class="icon icon-caret-down"></i> 
+                    </div>
+                    <div class="meta">
+                      <img alt="Jamesdownes" class="pull-left image" src="https://d2xe2j4d6y293d.cloudfront.net/assets/static/testimonials/jamesdownes-9e8f141ed7a9d84494b50f8d20500c40.png">
+                      <div class="name" style="">James Downes</div>
+                      <div class="title">Director of User Experience
+                        <a href="http://www.precedent.co.uk/">Precedent</a> 
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <ol class="carousel-indicators">
+                <li data-target="#testimonial-carousel" data-slide-to="0" class="active"></li>
+                <li data-target="#testimonial-carousel" data-slide-to="1"></li>
+              </ol>
+            </div>
+          </div>
+        </div>
+ -->        <!-- END Simple implementation of Carousel testimonial --> 
+      </div>
+      <div class="row main-features">
+        <div class="span4">
+          <div class="well">
+            <h3>Vid #1</h3>
+            <p>Enter a brief description of why it's so awesome here. Then move on to
+              the next feature.</p>
+            <a class="btn btn-primary fancybox-media" href="http://www.youtube.com/watch?v=opj24KnzrWo"><span class="btn-label">Find Out More</span></a> 
+          </div>
+        </div>
+        <div class="span4">
+          <div class="well">
+            <h3>Just an Image</h3>
+            <p>Enter a brief description of why it's so awesome here. Then move on to
+              the next feature.</p>
+            <a class="btn btn-info" id="fancybox-manual-a" href="javascript:;"><span class="btn-label">Find Out More</span></a> 
+          </div>
+        </div>
+        <div class="span4">
+          <div class="well">
+            <h3>Iframe With Vid</h3>
+            <p>Enter a brief description of why it's so awesome here. Then move on to
+              the next feature.</p>
+            <a class="btn btn-success" id="fancybox-manual-b" href="javascript:;"><span class="btn-label">Find Out More</span></a> 
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+
+
+</html>

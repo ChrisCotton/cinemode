@@ -10,10 +10,11 @@
     "passport": "0.1.x",
     "passport-facebook": ">= 0.1.x",
     "passport-local": ">= 0.1.x",
-    "jade" : "*",
+    "jade": "*",
     "redis": "0.8.x",
     "mysql": "2.0.0-alpha2",
     "crypto": "*",
-    "hammerjs": "1.0.x"
+    "hammerjs": "1.0.x",
+    "nodemon": "~0.7.8"
   }
-} 
+}
