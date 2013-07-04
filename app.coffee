@@ -28,8 +28,8 @@ app.configure( ()->
 )
 
 # routing
-app.get   'landing'   , (req,res) -> res.redirect('public/index.html')
-app.get   'ctest'   , (req,res) -> res.redirect('public/testing/carousel_test.html')
+app.get   'landing'   , (req,res) -> res.redirect('/public/index.html')
+app.get   'ctest'   , (req,res) -> res.redirect('/public/testing/carousel_test.html')
 app.get   '/'         , (req,res) -> res.redirect('/tv')
 app.get   '/tv', 
   ensureAuthenticated, 
