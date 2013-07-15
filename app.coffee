@@ -5,16 +5,17 @@ app.http().io();
 
 global.conf = JSON.parse fs.readFileSync('./config/cinemode.conf')
 # info conf
-
 require './modules/misc'
-require './modules/conn'
+require('./modules/mongoose').init();
+
 passport = require './modules/passport'
 
 # configure
 app.configure( ()->
   app.set 'views', __dirname + '/views'
   app.set 'view engine', 'jade'
-  
+
+  app.use express.logger()
   app.use express.compress()
   
   app.use express.cookieParser()
@@ -173,6 +174,6 @@ app.io.route 'video', {
 
 
 #info app.routes
-port = process.env.PORT || 80
+port = process.env.PORT || 3000
 info "listening on #{port}"
 app.listen (port)
