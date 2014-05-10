@@ -7,12 +7,14 @@ FACEBOOK_APP_ID       = global.conf.facebook.app_id
 FACEBOOK_APP_SECRET   = global.conf.facebook.app_secret
 FACEBOOK_CALLBACK_URL = global.conf.facebook.callback_url
 
+Models = (require './mongoose').models
+UserModel = Models.User
 
 # passport initialize
-passport.serializeUser( (user,done) -> done(null ,user.id) )
+passport.serializeUser( (user,done) -> done(null ,user._id) )
 
 passport.deserializeUser( (id,done) -> 
-  conn.cond1 'users', {id:id}, (err,usr) ->
+  UserModel.findById id, (err,usr) ->
     if usr == undefined
       throw new Error('unable to deserializeUser')
     else
@@ -32,23 +34,24 @@ passport.use( new FacebookStrategy(
     # Use a random number?
     # I should use the password_enable field
     pwd   = "null"  
-    conn.cond1 'users', {email:email}, (err,user) ->
+    UserModel.findOne {email:email}, (err,user) ->
       return done(null, user) if user
-      conn.insert 'users', { email:email, password_hash: sha256(pwd) }, (err) -> 
+      UserModel.create { email:email, passwordHash: sha256(pwd) }, (err) ->
         return done(err, false) if err
-        conn.cond1 'users', { email:email }, (err, usr) ->
+        UserModel.findOne { email:email }, (err, usr) ->
           return done(err, false) if err
           done(null, usr)
 ))
 
 passport.use( new LocalStrategy(
-  (email, pwd, done) -> 
-    conn.cond1 'users', {email:email}, (err, usr) -> 
+  (email, pwd, done) ->
+    UserModel = Models.User
+    UserModel.findOne { email:email }, (err, usr) ->
+      console.log usr
       return done err,  false if err
       return done null, false unless usr
-      return done null, false if (sha256 pwd) != usr.password_hash
+      return done null, false if (sha256 pwd) != usr.passwordHash
       done(null, usr)
-        
 ))
 
 global.authenticateLocal =  (req,res,next) ->
@@ -69,17 +72,18 @@ global.createUser = (req,res,next) ->
   email = req.body.email
   pwd   = req.body.password
   pwd_c = req.body.password_confirmation
-  
+  UserModel = Models.User
+
   if pwd != pwd_c
     res.render 'signup', { error: 'passwords do not match.' }
   else
-    conn.cond1 'users', {email:email}, (err,usr) ->
+    UserModel.findOne {email:email}, (err, usr) ->
       if usr
         res.render 'signup', { error: 'email already exists' }
       else
-        conn.insert 'users', { email:email, password_hash: sha256(pwd) }, (err) ->
+        UserModel.create { email:email, passwordHash: sha256(pwd) }, (err) ->
           if err
-            res.render 'signup', { error: 'cannot create user' }
+            res.render 'signup', { error: 'cannot create user: ' + err }
           else 
             next()  
             
@@ -90,14 +94,15 @@ global.changePassword = (req,res,next) ->
   pwd_c    = req.body.password_confirmation
   uid      = req.user.id
   
-  conn.cond1 'users', { id:uid }, (err,usr) ->
+  UserModel.findById uid, (err,usr) ->
     next() if err
-    if usr.password_hash != sha256(original)
+    if usr.passwordHash != sha256(original)
       res.render 'password', {error: "wrong password"}
     else if pwd != pwd_c
       res.render 'password', {error: "passwords do not match."}
     else
-      conn.update 'users', {password_hash: sha256(pwd)}, {id:uid}, () ->
+      usr.passwordHash = sha256 pwd
+      usr.save () ->
         res.redirect '/'
         
 module.exports = passport
